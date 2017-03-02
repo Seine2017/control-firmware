@@ -14,6 +14,8 @@ OBJCOPY = avr-objcopy
 SOURCES = src/main.c
 OBJECTS = $(SOURCES:.c=.o)
 
+all: control-firmware.hex
+
 control-firmware.hex: control-firmware.elf
 	$(OBJCOPY) -O ihex $< $@
 
@@ -22,3 +24,6 @@ control-firmware.elf: $(OBJECTS)
 
 *.o: *.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $<
+
+clean:
+	rm -f *.hex *.elf src/*.o
