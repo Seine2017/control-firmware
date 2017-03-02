@@ -9,7 +9,7 @@ LD = avr-gcc
 # Flags passed to linker:
 LDFLAGS =
 # Name of objcopy tool:
-OBJCOPY = objcopy
+OBJCOPY = avr-objcopy
 
 SOURCES = src/main.c
 OBJECTS = $(SOURCES:.c=.o)
