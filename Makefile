@@ -11,7 +11,7 @@ LDFLAGS =
 # Name of objcopy tool:
 OBJCOPY = avr-objcopy
 
-SOURCES = src/main.c
+SOURCES = src/main.c src/control.c
 OBJECTS = $(SOURCES:.c=.o)
 
 all: control-firmware.hex
