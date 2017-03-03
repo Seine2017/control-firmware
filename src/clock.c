@@ -8,7 +8,7 @@
 #include "clock.h"
 
 // The actual number of ticks that have passed since power on.
-clock_time_t clock_now = 0;
+volatile clock_time_t clock_now = 0;
 
 // Interrupt vector for hardware timer overflow.
 ISR(TIMER0_OVF_vect) {

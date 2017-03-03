@@ -24,7 +24,7 @@ typedef uint16_t clock_time_t;
 typedef int16_t clock_interval_t;
 
 // The actual number of ticks that have passed since power on.
-extern clock_time_t clock_now;
+extern volatile clock_time_t clock_now;
 
 // Initialise the clock.
 static void clock_init() {
