@@ -12,6 +12,9 @@ typedef struct {
   int16_t y_vel; // units=metres/second, resolution=2e-4, max=6.5534
 } control_state_t;
 
+// Initialise the control algorithm.
+void control_init();
+
 // Perform a full cycle of the control algorithm, which includes reading from
 // sensors, performing control calculations and updating the duty cycle of the
 // PWM outputs.
