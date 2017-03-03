@@ -4,6 +4,8 @@
 #ifndef __IMU_INTERFACE_H
 #define __IMU_INTERFACE_H
 
+#include <stdint.h>
+
 // A structure to hold all of the data that 'read_sensors' retrieves. All fields
 // are signed 16-bit numbers.
 // TO BE DEFINED: what is the resolution of each of these fields?

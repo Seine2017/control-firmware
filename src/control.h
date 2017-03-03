@@ -3,6 +3,8 @@
 #ifndef __CONTROL_H
 #define __CONTROL_H
 
+#include <stdint.h>
+
 // A structure to represent the estimated current physical state of the vehicle.
 typedef struct {
   int16_t roll;  // units: 5e-5 radians

@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #include "control.h"
 #include "imu_interface.h"
 #include "sat.h"
