@@ -13,7 +13,7 @@
 
 // The frequency at which ticks occur.
 // Hence, each tick represents 100 microseconds.
-#define clock_time_tICK_FREQUENCY 10000
+#define CLOCK_TICK_FREQUENCY 10000
 
 // A type representing the number of clock 'ticks' since the processor was last
 // reset or powered on.
@@ -42,7 +42,7 @@ static void clock_init() {
 
   //    F_OVERFLOW = F_CPU / (PRESCALER * (1 + OCR0A))
   // => OCR0A = F_CPU / (PRESCALER * F_OVERFLOW) - 1
-  OCR0A = (uint8_t) (((uint32_t) F_CPU) / (((uint32_t) 8) * ((uint32_t) clock_time_tICK_FREQUENCY)) - 1);
+  OCR0A = (uint8_t) (((uint32_t) F_CPU) / (((uint32_t) 8) * ((uint32_t) CLOCK_TICK_FREQUENCY)) - 1);
 }
 
 // Check the current time.
