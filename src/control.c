@@ -51,6 +51,7 @@ static int16_t control_compute_y_factor(const int16_t y_vel_desired,
   static int32_t y_vel_error_integral = 0;
   y_vel_error_integral =
     sat_s32_add(y_vel_error_integral, sat_s32_mul(y_vel_error, dt));
+  const int16_t y_vel_error_integral_16bit = (int16_t) (y_vel_error_integral >> 16);
 
   // Differentiate error.
   // units=metres/second, resolution=2e-4, max=6.5534
@@ -62,9 +63,9 @@ static int16_t control_compute_y_factor(const int16_t y_vel_desired,
 
   // Compute y factor.
   // units=none, resolution=3e-5, max=0.98301
-  const int16_t y_factor_p = sat_s32_mul(PID_GAIN_Y_P, y_vel_error);
-  const int16_t y_factor_i = sat_s32_mul(PID_GAIN_Y_I, y_vel_error_integral);
-  const int16_t y_factor_d = sat_s32_mul(PID_GAIN_Y_D, y_vel_error_deriv);
+  const int16_t y_factor_p = sat_s32_mul(PID_GAIN_Y_P, y_vel_error) >> 16;
+  const int16_t y_factor_i = sat_s32_mul(PID_GAIN_Y_I, y_vel_error_integral_16bit) >> 16;
+  const int16_t y_factor_d = sat_s32_mul(PID_GAIN_Y_D, y_vel_error_deriv) >> 16;
   const int16_t y_factor =
     sat_s32_add(sat_s32_add(y_factor_p, y_factor_i), y_factor_d);
 
@@ -88,6 +89,7 @@ static int16_t control_compute_roll_factor(const int16_t roll_desired,
   static int32_t roll_error_integral = 0;
   roll_error_integral =
     sat_s32_add(roll_error_integral, sat_s32_mul(roll_error, dt));
+  const int16_t roll_error_integral_16bit = (int16_t) (roll_error_integral >> 16);
 
   // Differentiate error.
   // units=radians, resolution=5e-5, max=1.63835
@@ -99,9 +101,9 @@ static int16_t control_compute_roll_factor(const int16_t roll_desired,
 
   // Compute roll factor.
   // units=none, resolution=3e-5, max=0.98301
-  const int16_t roll_factor_p = sat_s32_mul(PID_GAIN_ROLL_P, roll_error);
-  const int16_t roll_factor_i = sat_s32_mul(PID_GAIN_ROLL_I, roll_error_integral);
-  const int16_t roll_factor_d = sat_s32_mul(PID_GAIN_ROLL_D, roll_error_deriv);
+  const int16_t roll_factor_p = sat_s32_mul(PID_GAIN_ROLL_P, roll_error) >> 16;
+  const int16_t roll_factor_i = sat_s32_mul(PID_GAIN_ROLL_I, roll_error_integral_16bit) >> 16;
+  const int16_t roll_factor_d = sat_s32_mul(PID_GAIN_ROLL_D, roll_error_deriv) >> 16;
   const int16_t roll_factor =
     sat_s32_add(sat_s32_add(roll_factor_p, roll_factor_i), roll_factor_d);
 
@@ -125,6 +127,7 @@ static int16_t control_compute_pitch_factor(const int16_t pitch_desired,
   static int32_t pitch_error_integral = 0;
   pitch_error_integral =
     sat_s32_add(pitch_error_integral, sat_s32_mul(pitch_error, dt));
+  const int16_t pitch_error_integral_16bit = (int16_t) (pitch_error_integral >> 16);
 
   // Differentiate error.
   // units=radians, resolution=5e-5, max=1.63835
@@ -136,9 +139,9 @@ static int16_t control_compute_pitch_factor(const int16_t pitch_desired,
 
   // Compute pitch factor.
   // units=none, resolution=3e-5, max=0.98301
-  const int16_t pitch_factor_p = sat_s32_mul(PID_GAIN_PITCH_P, pitch_error);
-  const int16_t pitch_factor_i = sat_s32_mul(PID_GAIN_PITCH_I, pitch_error_integral);
-  const int16_t pitch_factor_d = sat_s32_mul(PID_GAIN_PITCH_D, pitch_error_deriv);
+  const int16_t pitch_factor_p = sat_s32_mul(PID_GAIN_PITCH_P, pitch_error) >> 16;
+  const int16_t pitch_factor_i = sat_s32_mul(PID_GAIN_PITCH_I, pitch_error_integral_16bit) >> 16;
+  const int16_t pitch_factor_d = sat_s32_mul(PID_GAIN_PITCH_D, pitch_error_deriv) >> 16;
   const int16_t pitch_factor =
     sat_s32_add(sat_s32_add(pitch_factor_p, pitch_factor_i), pitch_factor_d);
 
@@ -162,6 +165,7 @@ static int16_t control_compute_yaw_factor(const int16_t yaw_vel_desired,
   static int32_t yaw_vel_error_integral = 0;
   yaw_vel_error_integral =
     sat_s32_add(yaw_vel_error_integral, sat_s32_mul(yaw_vel_error, dt));
+  const int16_t yaw_vel_error_integral_16bit = (int16_t) (yaw_vel_error_integral >> 16);
 
   // Differentiate error.
   // units=radians/second, resolution=4e-4, max=13.1068
@@ -173,9 +177,9 @@ static int16_t control_compute_yaw_factor(const int16_t yaw_vel_desired,
 
   // Compute yaw factor.
   // units=none, resolution=3e-5, max=0.98301
-  const int16_t yaw_factor_p = sat_s32_mul(PID_GAIN_YAW_P, yaw_vel_error);
-  const int16_t yaw_factor_i = sat_s32_mul(PID_GAIN_YAW_I, yaw_vel_error_integral);
-  const int16_t yaw_factor_d = sat_s32_mul(PID_GAIN_YAW_D, yaw_vel_error_deriv);
+  const int16_t yaw_factor_p = sat_s32_mul(PID_GAIN_YAW_P, yaw_vel_error) >> 16;
+  const int16_t yaw_factor_i = sat_s32_mul(PID_GAIN_YAW_I, yaw_vel_error_integral_16bit) >> 16;
+  const int16_t yaw_factor_d = sat_s32_mul(PID_GAIN_YAW_D, yaw_vel_error_deriv) >> 16;
   const int16_t yaw_factor =
     sat_s32_add(sat_s32_add(yaw_factor_p, yaw_factor_i), yaw_factor_d);
 
