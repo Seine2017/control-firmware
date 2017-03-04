@@ -28,12 +28,6 @@
 // The estimated current state of the vehicle.
 control_state_t control_state = {0, 0, 0};
 
-// The time at which the last control cycle ran. During the next clock cycle,
-// the time will be checked again, and the difference between the two will be
-// used as the time interval for purposes of integrating and differentiating
-// variables.
-clock_time_t control_prev_time = 0;
-
 // y_vel_desired: units=metres/second, resolution=2e-4, max=6.5534
 // y_vel_current: units=metres/second, resolution=2e-4, max=6.5534
 // dt: units=ticks, resolution=1, max=32767
@@ -191,7 +185,6 @@ void control_init() {
   control_state.roll = 0;
   control_state.pitch = 0;
   control_state.y_vel = 0;
-  control_prev_time = clock_get_time();
 }
 
 // Perform a full cycle of the control algorithm, which includes reading from
@@ -203,9 +196,10 @@ void control_cycle() {
   //read_sensors(&raw_readings);
 
   // Find time interval (dt) since last control cycle.
+  static clock_time_t prev_time = 0;
   const clock_time_t curr_time = clock_get_time();
-  const clock_interval_t dt = clock_diff(control_prev_time, curr_time);
-  control_prev_time = curr_time;
+  const clock_interval_t dt = clock_diff(prev_time, curr_time);
+  prev_time = curr_time;
 
   // Process sensor data and update state.
   //TODO
