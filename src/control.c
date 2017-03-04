@@ -25,9 +25,6 @@
 #define PID_GAIN_YAW_I 0
 #define PID_GAIN_YAW_D 0
 
-// The estimated current state of the vehicle.
-control_state_t control_state = {0, 0, 0};
-
 // y_vel_desired: units=metres/second, resolution=2e-4, max=6.5534
 // y_vel_current: units=metres/second, resolution=2e-4, max=6.5534
 // dt: units=ticks, resolution=1, max=32767
@@ -181,16 +178,17 @@ static int16_t control_compute_yaw_factor(const int16_t yaw_vel_desired,
 }
 
 // Initialise the control algorithm.
-void control_init() {
-  control_state.roll = 0;
-  control_state.pitch = 0;
-  control_state.y_vel = 0;
+void control_init(control_state_t *state) {
+  state->roll = 0;
+  state->pitch = 0;
+  state->y_vel = 0;
+  state->yaw_vel = 0;
 }
 
 // Perform a full cycle of the control algorithm, which includes reading from
 // sensors, performing control calculations and updating the duty cycle of the
 // PWM outputs.
-void control_cycle() {
+void control_cycle(control_state_t *state) {
   // Read from sensors.
   raw_readings_t raw_readings;
   //read_sensors(&raw_readings);
@@ -206,10 +204,10 @@ void control_cycle() {
 
   // Compute the contributions towards vertical, roll, pitch and yaw movements.
   // units=none, resolution=3e-5, max=0.98301
-  const int16_t y_factor = control_compute_y_factor(0, control_state.y_vel, dt);
-  const int16_t roll_factor = control_compute_roll_factor(0, control_state.roll, dt);
-  const int16_t pitch_factor = control_compute_pitch_factor(0, control_state.pitch, dt);
-  const int16_t yaw_factor = control_compute_yaw_factor(0, 0, dt);
+  const int16_t y_factor = control_compute_y_factor(0, state->y_vel, dt);
+  const int16_t roll_factor = control_compute_roll_factor(0, state->roll, dt);
+  const int16_t pitch_factor = control_compute_pitch_factor(0, state->pitch, dt);
+  const int16_t yaw_factor = control_compute_yaw_factor(0, state->yaw_vel, dt);
 
   // Combine contributions to produce duty cycles.
   // units=none, resolution=3e-5, max=0.98301

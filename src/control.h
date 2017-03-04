@@ -10,14 +10,15 @@ typedef struct {
   int16_t roll;  // units=radians, resolution=5e-5, max=1.63835
   int16_t pitch; // units=radians, resolution=5e-5, max=1.63835
   int16_t y_vel; // units=metres/second, resolution=2e-4, max=6.5534
+  int16_t yaw_vel; // units=radians/second, resolution=4e-4, max=13.1068
 } control_state_t;
 
 // Initialise the control algorithm.
-void control_init();
+void control_init(control_state_t *state);
 
 // Perform a full cycle of the control algorithm, which includes reading from
 // sensors, performing control calculations and updating the duty cycle of the
 // PWM outputs.
-void control_cycle();
+void control_cycle(control_state_t *state);
 
 #endif
