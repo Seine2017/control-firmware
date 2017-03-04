@@ -12,6 +12,8 @@
 
 #include <stdint.h>
 
+// Source for all algorithms: https://locklessinc.com/articles/sat_arithmetic/
+
 // Saturating addition on 16-bit signed numbers.
 static int16_t sat_s16_add(int16_t x, int16_t y) {
   int16_t res = x + y;
