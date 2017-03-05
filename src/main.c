@@ -11,6 +11,7 @@ int main() {
   duty_cycles_t duty_cycles;
 
   clock_init();
+  escs_init();
 
   // Keep track of the time at which we last talked to the comms processor.
   clock_time_t last_communicated = clock_get_time();
