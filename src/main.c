@@ -19,7 +19,7 @@ int main() {
     control_cycle(&measured_state, &desired_state, &duty_cycles);
 
     // Update ESC duty cycles.
-    update_escs(&duty_cycles);
+    escs_update(&duty_cycles);
 
     // Communicate with comms processor.
     communicate(&desired_state);
@@ -33,7 +33,3 @@ void read_sensors(measured_state_t *destination) {}
 // This function isn't implemented yet, so temporarily create an emptyfunction
 // to allow the code to still compile.
 void communicate(desired_state_t *desired_state) {}
-
-// This function isn't implemented yet, so temporarily create an emptyfunction
-// to allow the code to still compile.
-void update_escs(duty_cycles_t *duty_cycle) {}

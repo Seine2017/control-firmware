@@ -20,7 +20,10 @@ typedef struct {
   float d;
 } duty_cycles_t;
 
+// Initialise the PWM outputs.
+void escs_init();
+
 // Set the new duty cycles for the ESCs.
-void update_escs(duty_cycles_t *duty_cycle);
+void escs_update(duty_cycles_t *duty_cycle);
 
 #endif
