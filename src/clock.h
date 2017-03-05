@@ -11,10 +11,7 @@
 #include <stdint.h>
 #include <avr/io.h>
 
-// The frequency at which ticks occur.
-// Hence, each tick represents 100 microseconds.
-#define CLOCK_TICKS_PER_SECOND 10000
-#define CLOCK_SECONDS_PER_TICK (1.0 / CLOCK_TICKS_PER_SECOND)
+#include "settings.h"
 
 // A type representing the number of clock 'ticks' since the processor was last
 // reset or powered on.
@@ -43,7 +40,7 @@ static void clock_init() {
 
   //    F_OVERFLOW = F_CPU / (PRESCALER * (1 + OCR0A))
   // => OCR0A = F_CPU / (PRESCALER * F_OVERFLOW) - 1
-  OCR0A = (uint8_t) (((uint32_t) F_CPU) / (((uint32_t) 8) * ((uint32_t) CLOCK_TICKS_PER_SECOND)) - 1);
+  OCR0A = (uint8_t) (((uint32_t) F_CPU) / (((uint32_t) 8) * ((uint32_t) TICKS_PER_SECOND)) - 1);
 }
 
 // Check the current time.

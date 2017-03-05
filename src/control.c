@@ -2,26 +2,7 @@
 #include "control.h"
 #include "imu_interface.h"
 #include "pid.h"
-
-// Y-factor PID parameters.
-#define PID_GAIN_Z_P 0
-#define PID_GAIN_Z_I 0
-#define PID_GAIN_Z_D 0
-
-// Roll-factor PID parameters.
-#define PID_GAIN_ROLL_P 0
-#define PID_GAIN_ROLL_I 0
-#define PID_GAIN_ROLL_D 0
-
-// Pitch-factor PID parameters.
-#define PID_GAIN_PITCH_P 0
-#define PID_GAIN_PITCH_I 0
-#define PID_GAIN_PITCH_D 0
-
-// Yaw-factor PID parameters.
-#define PID_GAIN_YAW_P 0
-#define PID_GAIN_YAW_I 0
-#define PID_GAIN_YAW_D 0
+#include "settings.h"
 
 // Perform a full cycle of the control algorithm.
 void control_cycle(measured_state_t *measured_state,
@@ -33,7 +14,7 @@ void control_cycle(measured_state_t *measured_state,
   const clock_time_t curr_time = clock_get_time();
   const clock_interval_t dt = clock_diff(prev_time, curr_time);
   prev_time = curr_time;
-  const float dt_float = ((float) dt) * ((float) CLOCK_SECONDS_PER_TICK);
+  const float dt_float = ((float) dt) * ((float) SECONDS_PER_TICK);
 
   // Compute the contributions towards vertical, roll, pitch and yaw movements.
   static pid_state_t z_pid_state = INITIAL_PID_STATE;
