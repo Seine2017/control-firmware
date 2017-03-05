@@ -6,6 +6,10 @@
 #define TICKS_PER_SECOND 10000
 #define SECONDS_PER_TICK (1.0 / TICKS_PER_SECOND)
 
+// The frequency at which we communicate with the comms processor.
+#define COMMUNICATIONS_PER_SECOND 10
+#define TICKS_PER_COMMUNICATION (TICKS_PER_SECOND / COMMUNICATIONS_PER_SECOND)
+
 // Y-factor PID parameters.
 #define PID_GAIN_Z_P 0
 #define PID_GAIN_Z_I 0

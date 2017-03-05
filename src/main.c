@@ -3,6 +3,7 @@
 #include "control.h"
 #include "escs_interface.h"
 #include "imu_interface.h"
+#include "settings.h"
 
 int main() {
   measured_state_t measured_state;
@@ -10,6 +11,9 @@ int main() {
   duty_cycles_t duty_cycles;
 
   clock_init();
+
+  // Keep track of the time at which we last talked to the comms processor.
+  clock_time_t last_communicated = clock_get_time();
 
   while (1) {
     // Communicate with IMU.
@@ -21,8 +25,12 @@ int main() {
     // Update ESC duty cycles.
     escs_update(&duty_cycles);
 
-    // Communicate with comms processor.
-    communicate(&desired_state);
+    clock_time_t now = clock_get_time();
+    if (clock_diff(last_communicated, now) > TICKS_PER_COMMUNICATION) {
+      // Communicate with comms processor.
+      communicate(&desired_state);
+      last_communicated = now;
+    }
   }
 }
 
