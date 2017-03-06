@@ -10,7 +10,7 @@
 #define SUCCESS 0
 #define ERROR 1
 
-// A structure to hold all of the data that 'read_sensors' retrieves.
+// A structure to hold all of the data that 'imu_read' retrieves.
 // Definition of axes in the body coordinate system:
 //   x axis: points directly between rotors A and B ("forwards")
 //   y axis: points in the direction of thrust ("upwards")
@@ -46,13 +46,15 @@ void read_IMU_id(void);
 void et_IMU_scales(void);
 void calibrate_IMU(void);
 void reset_IMU();
-void init_IMU();
 void read_raw_gyro(uint16_t *gyro);
 void read_raw_accel(uint16_t *accel);
+
+// Initialise the IMU.
+void imu_init();
 
 // Read data from the accelerometer, gyroscope and possibly magnetometer, filter
 // and process the data, and store the results into the structure pointed to by
 // 'destination'.
-void read_sensors(measured_state_t *destination);
+void imu_read(measured_state_t *destination);
 
 #endif

@@ -30,4 +30,8 @@
 #define PID_GAIN_YAW_I 0
 #define PID_GAIN_YAW_D 0
 
+// IMU sensor sensitivities.
+#define GYRO_SENSITIVITY 131    // = 131 LSB/degrees/sec
+#define ACCEL_SENSITIVITY 16384 // = 16384 LSB/g
+
 #endif

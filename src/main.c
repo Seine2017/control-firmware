@@ -11,6 +11,7 @@ int main() {
   duty_cycles_t duty_cycles;
 
   clock_init();
+  imu_init();
   escs_init();
 
   // Keep track of the time at which we last talked to the comms processor.
@@ -18,7 +19,7 @@ int main() {
 
   while (1) {
     // Communicate with IMU.
-    read_sensors(&measured_state);
+    imu_read(&measured_state);
 
     // Run control algorithm.
     control_cycle(&measured_state, &desired_state, &duty_cycles);
@@ -34,10 +35,6 @@ int main() {
     }
   }
 }
-
-// This function isn't implemented yet, so temporarily create an emptyfunction
-// to allow the code to still compile.
-void read_sensors(measured_state_t *destination) {}
 
 // This function isn't implemented yet, so temporarily create an emptyfunction
 // to allow the code to still compile.

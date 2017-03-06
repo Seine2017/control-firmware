@@ -1,18 +1,22 @@
 // This file difines all the functions that are necessary to
 // interface with the IMU. It assumes debug.h library included
 
+#include <stdio.h>
 #include <avr/io.h>
 #include <util/delay.h>
 #include "I2C.h"
 #include "imu_reg.h"
-//#include "MadgwickAHRS.h"
+#include "MadgwickAHRS.h"
+#include "imu_interface.h"
+#include "error.h"
+#include "settings.h"
 
 // Define variables to be used by the imu library
 uint8_t state; 
 float gyroBias[3] = {0, 0, 0}, accelBias[3] = {0, 0, 0};
 
 // Varibles to store raw values of the accelerometer
-uint16_t accel_raw[3]; //possibly can be deined in the read_sensors function
+uint16_t accel_raw[3]; //possibly can be deined in the imu_read function
 uint16_t gyro_raw[3];
 
 // Variables 
@@ -103,12 +107,13 @@ void read_IMU_id(void){
     //printf("%d\n",id);
 
     if (state == ERROR) {
-        printf("ERROR: %d\r\n", state);
+      error(ERROR_I2C, "I2C error");
     }
     if (id != 0x73) {
-    	printf("Unexpected id. Received: %.2x\r\n", id);
+    	char message[32];
+    	snprintf(message, 32, "unexpected ID; received %d", id);
+    	error(ERROR_BAD_IMU_ID, message);
     }
-    printf("Device identified\r\n");
 }
 
 void set_IMU_scales(void){
@@ -161,9 +166,6 @@ void calibrate_IMU(void){
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_GYRO_CONFIG, 0x00);  // Set gyro full-scale to 250 degrees per second, maximum sensitivity
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_ACCEL_CONFIG, 0x00); // Set accelerometer full-scale to 2 g, maximum sensitivity
 
-	// uint16_t  gyrosensitivity  = 131;   // = 131 LSB/degrees/sec
-	// uint16_t  accelsensitivity = 16384;  // = 16384 LSB/g
-
     // Configure FIFO to capture accelerometer and gyro data for bias calculation
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_USER_CTRL, 0x40);   // Enable FIFO
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_FIFO_EN, 0x78);     // Enable gyro and accelerometer sensors for FIFO  (max size 512 bytes in MPU-9150)
@@ -200,8 +202,8 @@ void calibrate_IMU(void){
 	gyro_bias[1]  /= (int32_t) packet_count;
 	gyro_bias[2]  /= (int32_t) packet_count;
 
-	if(accel_bias[2] > 0L) {accel_bias[2] -= (int32_t) accelsensitivity;}  // Remove gravity from the z-axis accelerometer bias calculation
-	else {accel_bias[2] += (int32_t) accelsensitivity;}
+	if(accel_bias[2] > 0L) {accel_bias[2] -= (int32_t) ACCEL_SENSITIVITY;}  // Remove gravity from the z-axis accelerometer bias calculation
+	else {accel_bias[2] += (int32_t) ACCEL_SENSITIVITY;}
 
 	// Construct the gyro biases for push to the hardware gyro bias registers, which are reset to zero upon device startup
 	data[0] = (-gyro_bias[0]/4  >> 8) & 0xFF; // Divide by 4 to get 32.9 LSB per deg/s to conform to expected bias input format
@@ -220,9 +222,9 @@ void calibrate_IMU(void){
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_ZG_OFFS_USRL, data[5]);
 
 	// Output scaled gyro biases for display in the main program
-	// gyroBias[0] = (float) gyro_bias[0]/(float) gyrosensitivity;
-	// gyroBias[1] = (float) gyro_bias[1]/(float) gyrosensitivity;
-	// gyroBias[2] = (float) gyro_bias[2]/(float) gyrosensitivity;
+	// gyroBias[0] = (float) gyro_bias[0]/(float) GYRO_SENSITIVITY;
+	// gyroBias[1] = (float) gyro_bias[1]/(float) GYRO_SENSITIVITY;
+	// gyroBias[2] = (float) gyro_bias[2]/(float) GYRO_SENSITIVITY;
 
 	// Construct the accelerometer biases for push to the hardware accelerometer bias registers. These registers contain
 	// factory trim values which must be added to the calculated accelerometer biases; on boot up these registers will hold
@@ -269,15 +271,15 @@ void calibrate_IMU(void){
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, 0x7E, data[5]);
 
 	// Output scaled accelerometer biases for display in the main program
-	//   accelBias[0] = (float)accel_bias[0]/(float)accelsensitivity;
-	//   accelBias[1] = (float)accel_bias[1]/(float)accelsensitivity;
-	//   accelBias[2] = (float)accel_bias[2]/(float)accelsensitivity;
+	//   accelBias[0] = (float)accel_bias[0]/(float)ACCEL_SENSITIVITY;
+	//   accelBias[1] = (float)accel_bias[1]/(float)ACCEL_SENSITIVITY;
+	//   accelBias[2] = (float)accel_bias[2]/(float)ACCEL_SENSITIVITY;
 
 	//set the initial angle according to the accelerometer readings
 	read_raw_accel(&accel_raw[0]);
-	accel_x = (int)accel_raw[0]/(double)accelsensitivity;
-	accel_y = (int)accel_raw[1]/(double)accelsensitivity;
-	accel_z = (int)accel_raw[2]/(double)accelsensitivity;
+	double accel_x = (int)accel_raw[0]/(double)ACCEL_SENSITIVITY;
+	double accel_y = (int)accel_raw[1]/(double)ACCEL_SENSITIVITY;
+	double accel_z = (int)accel_raw[2]/(double)ACCEL_SENSITIVITY;
 	roll = -asin(accel_x/sqrt(accel_x*accel_x+accel_y*accel_y+accel_z*accel_z))*180/3.1415;
 	pitch = asin(accel_y/sqrt(accel_x*accel_x+accel_y*accel_y+accel_z*accel_z))*180/3.1415;	
 }
@@ -287,7 +289,7 @@ void reset_IMU(){
 	_delay_ms(100);// Delay 100 ms
 }
 
-void init_IMU(){
+void imu_init(){
 
 	//initialize I2C
 	init_I2C();
@@ -321,7 +323,7 @@ void init_IMU(){
 	// It is possible to get a 4 kHz sample rate from the accelerometer by choosing 1 for
 	// accel_fchoice_b bit [3]; in this case the bandwidth is 1.13 kHz
 	uint8_t c;
-	read_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_FF_THR, c); // get current ACCEL_CONFIG2 register value
+	read_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_FF_THR, &c); // get current ACCEL_CONFIG2 register value
 	c = c & ~0x0F; // Clear accel_fchoice_b (bit 3) and A_DLPFG (bits [2:0])
 	c = c | 0x00;  // Set accelerometer rate to 1 kHz and bandwidth to 460 Hz, delay 1.94ms gives refresh rate 500Hz
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_FF_THR, c); // Write new ACCEL_CONFIG2 register value
@@ -361,16 +363,16 @@ void read_raw_accel(uint16_t *accel){
 
 }
 // This function has to be executed at 250Hz frequeny (every 4ms)
-void read_sensors(measured_state_t *destination){
+void imu_read(measured_state_t *destination){
 	read_raw_gyro(&gyro_raw[0]);
-	gyro_x = (int)gyro_raw[0]/(double)gyrosensitivity;//-gyroBias[0];
-	gyro_y = (int)gyro_raw[1]/(double)gyrosensitivity;//-gyroBias[1];
-	gyro_z = (int)gyro_raw[2]/(double)gyrosensitivity;//-gyroBias[2];
+	double gyro_x = (int)gyro_raw[0]/(double)GYRO_SENSITIVITY;//-gyroBias[0];
+	double gyro_y = (int)gyro_raw[1]/(double)GYRO_SENSITIVITY;//-gyroBias[1];
+	double gyro_z = (int)gyro_raw[2]/(double)GYRO_SENSITIVITY;//-gyroBias[2];
 
 	read_raw_accel(&accel_raw[0]);
-	accel_x = (int)accel_raw[0]/(double)accelsensitivity;//-accelBias[0];
-	accel_y = (int)accel_raw[1]/(double)accelsensitivity;//-accelBias[1];
-	accel_z = (int)accel_raw[2]/(double)accelsensitivity;//-accelBias[2];
+	double accel_x = (int)accel_raw[0]/(double)ACCEL_SENSITIVITY;//-accelBias[0];
+	double accel_y = (int)accel_raw[1]/(double)ACCEL_SENSITIVITY;//-accelBias[1];
+	double accel_z = (int)accel_raw[2]/(double)ACCEL_SENSITIVITY;//-accelBias[2];
 	
 	/*
 	// Integration of the roll and pitch 
