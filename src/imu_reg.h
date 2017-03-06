@@ -1,4 +1,4 @@
-// This file defines all the registers of the MPU9250 
+// This file defines all the registers of the MPU9250
 // according to the datasheet
 
 #ifndef IMU_REG_H_
@@ -349,4 +349,4 @@
 #define MPU9250_DMP_MEMORY_BANK_SIZE    256
 #define MPU9250_DMP_MEMORY_CHUNK_SIZE   16
 
-#endif 
+#endif

@@ -12,14 +12,14 @@
 #include "settings.h"
 
 // Define variables to be used by the imu library
-uint8_t state; 
+uint8_t state;
 float gyroBias[3] = {0, 0, 0}, accelBias[3] = {0, 0, 0};
 
 // Varibles to store raw values of the accelerometer
 uint16_t accel_raw[3]; //possibly can be deined in the imu_read function
 uint16_t gyro_raw[3];
 
-// Variables 
+// Variables
 //float pitch = 0, roll = 0, pitch_accel = 0, roll_accel = 0;
 
 static uint8_t write_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t data_8bit){
@@ -97,7 +97,7 @@ static uint8_t read_IMU_bytes(uint8_t IMU_address, uint8_t address, uint8_t coun
 	//if(read_I2C_status() != ???)
 	//	return ERROR;
 	transmit_STOP();
-	
+
 	return SUCCESS;
 }
 
@@ -304,7 +304,7 @@ static void calibrate_IMU(void){
 	float accel_y = (int)accel_raw[1]/(float)ACCEL_SENSITIVITY;
 	float accel_z = (int)accel_raw[2]/(float)ACCEL_SENSITIVITY;
 	roll = -asinf(accel_x/sqrtf(accel_x*accel_x+accel_y*accel_y+accel_z*accel_z))*180/3.1415;
-	pitch = asinf(accel_y/sqrtf(accel_x*accel_x+accel_y*accel_y+accel_z*accel_z))*180/3.1415;	
+	pitch = asinf(accel_y/sqrtf(accel_x*accel_x+accel_y*accel_y+accel_z*accel_z))*180/3.1415;
 	*/
 }
 
@@ -317,16 +317,16 @@ void imu_init(){
 
 	//initialize I2C
 	init_I2C();
-	
+
 	//check connection with the IMU by asking for the id
 	read_IMU_id();
-	
+
 	//reset IMU
 	reset_IMU();
-	
+
 	//calibrate IMU
 	calibrate_IMU();
-	
+
 	// Disable sleep mode bit (6), enable all sensors
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_PWR_MGMT_1, 0x00);
 	_delay_ms(100);// Delay 100 ms for PLL to get established on x-axis gyro; should check for PLL ready interrupt
@@ -353,7 +353,7 @@ void imu_init(){
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_FF_THR, c); // Write new ACCEL_CONFIG2 register value
 	// The accelerometer, gyro, and thermometer are set to 1 kHz sample rates,
 	// but all these rates are further reduced by a factor of 4 to 250 Hz because of the SMPLRT_DIV setting
-	
+
 	//set IMU scales
 	set_IMU_scales();
 
@@ -377,9 +377,9 @@ void imu_read(measured_state_t *destination){
 	float accel_x = (int)accel_raw[0]/(float)ACCEL_SENSITIVITY;//-accelBias[0];
 	float accel_y = (int)accel_raw[1]/(float)ACCEL_SENSITIVITY;//-accelBias[1];
 	float accel_z = (int)accel_raw[2]/(float)ACCEL_SENSITIVITY;//-accelBias[2];
-	
+
 	/*
-	// Integration of the roll and pitch 
+	// Integration of the roll and pitch
 	// divide by 250Hz, equivalent to multiplying by 4ms
 	roll += gyro_y/250;
 	pitch += gyro_x/250;

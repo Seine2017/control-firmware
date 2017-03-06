@@ -1,7 +1,7 @@
 // This file specifies the interface between the IMU interfacing code (written
 // by Pawel) and the control code (written by Kier).
-// In this file are declared all the necesary function for interfacing 
-// with the IMU. 
+// In this file are declared all the necesary function for interfacing
+// with the IMU.
 
 #ifndef __IMU_INTERFACE_H
 #define __IMU_INTERFACE_H
@@ -36,7 +36,7 @@ typedef struct {
   float yaw_vel;
 } measured_state_t;
 
-// Variables 
+// Variables
 //extern float pitch, roll, pitch_accel, roll_accel;
 
 //uint8_t write_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t data_8bit);
