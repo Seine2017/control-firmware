@@ -41,6 +41,7 @@ float invSqrt(float x);
 //---------------------------------------------------------------------------------------------------
 // AHRS algorithm update
 
+/*
 void MadgwickAHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz) {
 	float recipNorm;
 	float s0, s1, s2, s3;
@@ -136,6 +137,7 @@ void MadgwickAHRSupdate(float gx, float gy, float gz, float ax, float ay, float 
 	q2 *= recipNorm;
 	q3 *= recipNorm;
 }
+*/
 
 //---------------------------------------------------------------------------------------------------
 // IMU algorithm update
