@@ -22,7 +22,7 @@ uint16_t gyro_raw[3];
 // Variables 
 float pitch = 0, roll = 0, pitch_accel = 0, roll_accel = 0;
 
-uint8_t write_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t data_8bit){
+static uint8_t write_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t data_8bit){
 	uint8_t IMU_address_write = (IMU_address << 1);
 
 	transmit_START();
@@ -42,7 +42,7 @@ uint8_t write_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t data_8bit){
 	return SUCCESS;
 }
 
-uint8_t read_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t *data_8bit){
+static uint8_t read_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t *data_8bit){
 	uint8_t IMU_address_write = (IMU_address << 1);
 	uint8_t IMU_address_read = (IMU_address << 1) | 0x01;
 
@@ -69,7 +69,7 @@ uint8_t read_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t *data_8bit){
 	return SUCCESS;
 }
 
-uint8_t read_IMU_bytes(uint8_t IMU_address, uint8_t address, uint8_t count, uint8_t * data){
+static uint8_t read_IMU_bytes(uint8_t IMU_address, uint8_t address, uint8_t count, uint8_t * data){
 	uint8_t IMU_address_write = (IMU_address << 1);
 	uint8_t IMU_address_read = (IMU_address << 1) | 0x01;
 
@@ -101,7 +101,7 @@ uint8_t read_IMU_bytes(uint8_t IMU_address, uint8_t address, uint8_t count, uint
 	return SUCCESS;
 }
 
-void read_IMU_id(void){
+static void read_IMU_id(void){
     uint8_t id;
     state = read_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_WHO_AM_I, &id);
     //printf("%d\n",id);
@@ -116,7 +116,7 @@ void read_IMU_id(void){
     }
 }
 
-void set_IMU_scales(void){
+static void set_IMU_scales(void){
 	//set gyroscope full-scale range
 	uint8_t gyro_temp_8bit;
 	read_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_GYRO_CONFIG, &gyro_temp_8bit);//add error checking
@@ -134,8 +134,28 @@ void set_IMU_scales(void){
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_ACCEL_CONFIG,accel_temp_8bit);
 }
 
+static void read_raw_gyro(uint16_t *gyro){
+	uint8_t raw_gyro[6];
+	read_IMU_bytes(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_GYRO_XOUT_H,6, &raw_gyro[0]);
+
+
+	gyro[0] = (((uint16_t)raw_gyro[0]<<8)|raw_gyro[1]);
+	gyro[1] = (((uint16_t)raw_gyro[2]<<8)|raw_gyro[3]);
+	gyro[2] = (((uint16_t)raw_gyro[4]<<8)|raw_gyro[5]);
+}
+
+static void read_raw_accel(uint16_t *accel){
+	uint8_t raw_accel[6];
+	read_IMU_bytes(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_ACCEL_XOUT_H,6 , &raw_accel[0]);
+
+	accel[0] = (((uint16_t)raw_accel[0]<<8)|raw_accel[1]);
+	accel[1]= (((uint16_t)raw_accel[2]<<8)|raw_accel[3]);
+	accel[2] = (((uint16_t)raw_accel[4]<<8)|raw_accel[5]);
+
+}
+
 // void calibrate_IMU(float * gyroBias, float * accelBias)
-void calibrate_IMU(void){
+static void calibrate_IMU(void){
 	uint8_t data[12]; // data array to hold accelerometer and gyro x, y, z, data
 	uint16_t ii, packet_count, fifo_count;
 	int32_t gyro_bias[3]  = {0, 0, 0}, accel_bias[3] = {0, 0, 0};
@@ -284,7 +304,7 @@ void calibrate_IMU(void){
 	pitch = asinf(accel_y/sqrtf(accel_x*accel_x+accel_y*accel_y+accel_z*accel_z))*180/3.1415;	
 }
 
-void reset_IMU(){
+static void reset_IMU(){
 	write_IMU_byte(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_PWR_MGMT_1, 0x80);
 	_delay_ms(100);// Delay 100 ms
 }
@@ -340,26 +360,6 @@ void imu_init(){
 	//write_IMU_byte(MPU9250_DEFAULT_ADDRESS, 0x37, 0x22);
 	//write_IMU_byte(MPU9250_DEFAULT_ADDRESS, 0x38, 0x01);  // Enable data ready (bit 0) interrupt
 	//_delay_ms(100);
-
-}
-
-void read_raw_gyro(uint16_t *gyro){
-	uint8_t raw_gyro[6];
-	read_IMU_bytes(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_GYRO_XOUT_H,6, &raw_gyro[0]);
-
-
-	gyro[0] = (((uint16_t)raw_gyro[0]<<8)|raw_gyro[1]);
-	gyro[1] = (((uint16_t)raw_gyro[2]<<8)|raw_gyro[3]);
-	gyro[2] = (((uint16_t)raw_gyro[4]<<8)|raw_gyro[5]);
-}
-
-void read_raw_accel(uint16_t *accel){
-	uint8_t raw_accel[6];
-	read_IMU_bytes(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_ACCEL_XOUT_H,6 , &raw_accel[0]);
-
-	accel[0] = (((uint16_t)raw_accel[0]<<8)|raw_accel[1]);
-	accel[1]= (((uint16_t)raw_accel[2]<<8)|raw_accel[3]);
-	accel[2] = (((uint16_t)raw_accel[4]<<8)|raw_accel[5]);
 
 }
 // This function has to be executed at 250Hz frequeny (every 4ms)

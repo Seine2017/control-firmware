@@ -31,9 +31,24 @@ volatile float beta = betaDef;								// 2 * proportional gain (Kp)
 volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;	// quaternion of sensor frame relative to auxiliary frame
 
 //---------------------------------------------------------------------------------------------------
-// Function declarations
+// Fast inverse square-root
+// See: http://en.wikipedia.org/wiki/Fast_inverse_square_root
 
-float invSqrt(float x);
+// The -Wstrict-aliasing warning is triggered when we cast between float* and
+// long* pointers in invSqrt. We know what we're doing, so we can disable this
+// warning temporarily.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+static float invSqrt(float x) {
+	float halfx = 0.5f * x;
+	float y = x;
+	long i = *(long*)&y;
+	i = 0x5f3759df - (i>>1);
+	y = *(float*)&i;
+	y = y * (1.5f - (halfx * y * y));
+	return y;
+}
+#pragma GCC diagnostic pop
 
 //====================================================================================================
 // Functions
@@ -209,26 +224,6 @@ void MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, flo
 	q2 *= recipNorm;
 	q3 *= recipNorm;
 }
-
-//---------------------------------------------------------------------------------------------------
-// Fast inverse square-root
-// See: http://en.wikipedia.org/wiki/Fast_inverse_square_root
-
-// The -Wstrict-aliasing warning is triggered when we cast between float* and
-// long* pointers in invSqrt. We know what we're doing, so we can disable this
-// warning temporarily.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-aliasing"
-float invSqrt(float x) {
-	float halfx = 0.5f * x;
-	float y = x;
-	long i = *(long*)&y;
-	i = 0x5f3759df - (i>>1);
-	y = *(float*)&i;
-	y = y * (1.5f - (halfx * y * y));
-	return y;
-}
-#pragma GCC diagnostic pop
 
 //====================================================================================================
 // END OF CODE

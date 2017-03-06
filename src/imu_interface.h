@@ -39,15 +39,15 @@ typedef struct {
 // Variables 
 extern float pitch, roll, pitch_accel, roll_accel;
 
-uint8_t write_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t data_8bit);
-uint8_t read_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t *data_8bit);
-uint8_t read_IMU_bytes(uint8_t IMU_address, uint8_t address, uint8_t count, uint8_t * data);
-void read_IMU_id(void);
-void et_IMU_scales(void);
-void calibrate_IMU(void);
-void reset_IMU();
-void read_raw_gyro(uint16_t *gyro);
-void read_raw_accel(uint16_t *accel);
+//uint8_t write_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t data_8bit);
+//uint8_t read_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t *data_8bit);
+//uint8_t read_IMU_bytes(uint8_t IMU_address, uint8_t address, uint8_t count, uint8_t * data);
+//void read_IMU_id(void);
+//void et_IMU_scales(void);
+//void read_raw_gyro(uint16_t *gyro);
+//void read_raw_accel(uint16_t *accel);
+//void calibrate_IMU(void);
+//void reset_IMU();
 
 // Initialise the IMU.
 void imu_init();
