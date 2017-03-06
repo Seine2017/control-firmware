@@ -212,6 +212,11 @@ void MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, flo
 // Fast inverse square-root
 // See: http://en.wikipedia.org/wiki/Fast_inverse_square_root
 
+// The -Wstrict-aliasing warning is triggered when we cast between float* and
+// long* pointers in invSqrt. We know what we're doing, so we can disable this
+// warning temporarily.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
 float invSqrt(float x) {
 	float halfx = 0.5f * x;
 	float y = x;
@@ -221,6 +226,7 @@ float invSqrt(float x) {
 	y = y * (1.5f - (halfx * y * y));
 	return y;
 }
+#pragma GCC diagnostic pop
 
 //====================================================================================================
 // END OF CODE
