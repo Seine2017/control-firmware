@@ -7,7 +7,7 @@ CFLAGS = -O2 -Wall -Wno-unused-function -Wno-unused-variable -mmcu=atmega328p
 # Name of linker:
 LD = avr-gcc
 # Flags passed to linker:
-LDFLAGS =
+LDFLAGS = -mmcu=atmega328p
 # Name of objcopy tool:
 OBJCOPY = avr-objcopy
 # Name of size tool:
