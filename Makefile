@@ -10,6 +10,8 @@ LD = avr-gcc
 LDFLAGS =
 # Name of objcopy tool:
 OBJCOPY = avr-objcopy
+# Name of size tool:
+SIZE = avr-size
 
 SOURCES = src/main.c src/control.c src/clock.c src/escs.c
 OBJECTS = $(SOURCES:.c=.o)
@@ -18,6 +20,7 @@ all: control-firmware.hex
 
 control-firmware.hex: control-firmware.elf
 	$(OBJCOPY) -O ihex $< $@
+	$(SIZE) $@
 
 control-firmware.elf: $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $^
