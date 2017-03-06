@@ -20,7 +20,7 @@ uint16_t accel_raw[3]; //possibly can be deined in the imu_read function
 uint16_t gyro_raw[3];
 
 // Variables 
-float pitch = 0, roll = 0, pitch_accel = 0, roll_accel = 0;
+//float pitch = 0, roll = 0, pitch_accel = 0, roll_accel = 0;
 
 static uint8_t write_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t data_8bit){
 	uint8_t IMU_address_write = (IMU_address << 1);
@@ -296,12 +296,16 @@ static void calibrate_IMU(void){
 	//   accelBias[2] = (float)accel_bias[2]/(float)ACCEL_SENSITIVITY;
 
 	//set the initial angle according to the accelerometer readings
+	// When using the Madgwick algorithm, this code isn't necessary since
+	// roll and pitch will be immediately overwritten.
+	/*
 	read_raw_accel(&accel_raw[0]);
 	float accel_x = (int)accel_raw[0]/(float)ACCEL_SENSITIVITY;
 	float accel_y = (int)accel_raw[1]/(float)ACCEL_SENSITIVITY;
 	float accel_z = (int)accel_raw[2]/(float)ACCEL_SENSITIVITY;
 	roll = -asinf(accel_x/sqrtf(accel_x*accel_x+accel_y*accel_y+accel_z*accel_z))*180/3.1415;
 	pitch = asinf(accel_y/sqrtf(accel_x*accel_x+accel_y*accel_y+accel_z*accel_z))*180/3.1415;	
+	*/
 }
 
 static void reset_IMU(){
@@ -394,9 +398,7 @@ void imu_read(measured_state_t *destination){
 	// or I am doing something wrong
 
 	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z);
-	roll= (acosf(q0/sqrtf(q0*q0+q2*q2))*2.0f)*180/3.14;
-	pitch= atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2))*180/3.14;
-	destination->roll = roll;
-	destination->pitch = pitch;
+	destination->roll = (acosf(q0/sqrtf(q0*q0+q2*q2))*2.0f)*180/3.14;
+	destination->pitch = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2))*180/3.14;
 }
 

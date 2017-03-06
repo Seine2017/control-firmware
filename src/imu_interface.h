@@ -37,7 +37,7 @@ typedef struct {
 } measured_state_t;
 
 // Variables 
-extern float pitch, roll, pitch_accel, roll_accel;
+//extern float pitch, roll, pitch_accel, roll_accel;
 
 //uint8_t write_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t data_8bit);
 //uint8_t read_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t *data_8bit);
