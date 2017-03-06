@@ -1,5 +1,5 @@
 # Name of microcontroller (atmega328p, atmega32u4):
-MCU = atmega328p
+MCU = atmega32u4
 
 # Name of C compiler:
 CC = avr-gcc
@@ -33,3 +33,6 @@ control-firmware.elf: $(OBJECTS)
 
 clean:
 	rm -f *.hex *.elf src/*.o
+
+flash:
+	avrdude -p$(MCU) -cc232hm -P/dev/ttyUSB0 -b57600 -U flash:w:control-firmware.hex:i
