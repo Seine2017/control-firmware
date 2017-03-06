@@ -61,7 +61,7 @@ static uint16_t scale_duty_cycle(float duty_cycle, float max) {
     OCR3CL = (uint8_t) d;
   }
 
-#elif defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__)
+#elif defined (__AVR_ATmega168__) || defined (__AVR_ATmega168P__) || defined (__AVR_ATmega328__) || defined (__AVR_ATmega328P__)
   // We have a 16-bit timer (timer 1) and an 8-bit timer (timer 2).
   // Print a warning about this non-ideal situation.
   #warning "The platform you are compiling for does not have enough 16-bit timers; falling back to using an 8-bit timer for PWM outputs C and D."
@@ -105,6 +105,6 @@ static uint16_t scale_duty_cycle(float duty_cycle, float max) {
 
 #else
   // Unknown timer layout.
-  #error "Unknown hardware timer layout - please consult the datasheet and update escs.h."
+  #error "Unknown hardware timer layout - please consult the datasheet and update escs.c."
 
 #endif
