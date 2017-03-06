@@ -31,8 +31,4 @@ typedef struct {
   float yaw_vel;
 } desired_state_t;
 
-// Communicate with the communications processor, filling the 'desired_state'
-// structure with the received setpoint information.
-void communicate(desired_state_t *desired_state);
-
 #endif
