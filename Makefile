@@ -1,13 +1,16 @@
+# Name of microcontroller (atmega328p, atmega32u4):
+MCU = atmega328p
+
 # Name of C compiler:
 CC = avr-gcc
 # Flags passed to C preprocessor:
 CPPFLAGS = -Isrc -DF_CPU=16000000
 # Flags passed to C compiler:
-CFLAGS = -O2 -Wall -Wno-unused-function -Wno-unused-variable -mmcu=atmega328p
+CFLAGS = -O2 -Wall -Wno-unused-function -Wno-unused-variable -mmcu=$(MCU)
 # Name of linker:
 LD = avr-gcc
 # Flags passed to linker:
-LDFLAGS = -mmcu=atmega328p
+LDFLAGS = -mmcu=$(MCU)
 # Name of objcopy tool:
 OBJCOPY = avr-objcopy
 # Name of size tool:
