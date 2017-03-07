@@ -1,3 +1,6 @@
+#include <avr/interrupt.h>
+#include <util/delay.h>
+
 #include "clock.h"
 #include "comms_interface.h"
 #include "control.h"
@@ -6,22 +9,24 @@
 #include "settings.h"
 
 int main() {
-  measured_state_t measured_state;
-  desired_state_t desired_state;
   rotor_speeds_t rotor_speeds;
+  int t = 0;
 
-  clock_init();
-  imu_init();
   escs_init();
 
+  // Enable interrupts
+  sei();
+
   while (1) {
-    // Communicate with IMU.
-    imu_read(&measured_state);
-
-    // Run control algorithm.
-    control_cycle(&measured_state, &desired_state, &rotor_speeds);
-
-    // Update ESC duty cycles.
+    rotor_speeds.a = ((float) t) * 0.1;
+    rotor_speeds.b = ((float) t) * 0.1 + 0.05;
+    rotor_speeds.c = ((float) t) * 0.1;
+    rotor_speeds.d = ((float) t) * 0.1 + 0.05;
     escs_update(&rotor_speeds);
+    _delay_ms(1000);
+    t++;
+    if (t == 6) {
+      t = 0;
+    }
   }
 }
