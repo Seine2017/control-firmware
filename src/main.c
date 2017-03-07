@@ -1,3 +1,5 @@
+#include <avr/interrupt.h>
+
 #include "clock.h"
 #include "comms_interface.h"
 #include "control.h"
@@ -13,6 +15,9 @@ int main() {
   clock_init();
   imu_init();
   escs_init();
+
+  // Enable interrupts.
+  sei();
 
   while (1) {
     // Communicate with IMU.
