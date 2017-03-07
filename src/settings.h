@@ -1,6 +1,8 @@
 #ifndef __SETTINGS_H
 #define __SETTINGS_H
 
+#include <avr/io.h>
+
 // The frequency at which system clock ticks occur.
 // Hence, each tick represents 100 microseconds.
 #define CLOCK_TICKS_PER_SECOND 10000
