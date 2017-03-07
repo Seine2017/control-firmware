@@ -6,6 +6,13 @@
 #define CLOCK_TICKS_PER_SECOND 10000
 #define SECONDS_PER_CLOCK_TICK (1.0 / CLOCK_TICKS_PER_SECOND)
 
+// The frequency/period at which software PWM ticks occur.
+#define US_PER_PWM_TICK 10
+#define US_PER_PWM_REP 20000
+#define PWM_TICKS_PER_REP (US_PER_PWM_REP / US_PER_PWM_TICK)
+#define PWM_TICKS_PER_SECOND (1000000 / US_PER_PWM_TICK)
+#define PWM_TICKS_PER_MS (1000 / US_PER_PWM_TICK)
+
 // Z-factor PID parameters.
 #define PID_GAIN_Z_P 0
 #define PID_GAIN_Z_I 0

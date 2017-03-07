@@ -4,12 +4,6 @@
 #include "escs_interface.h"
 #include "settings.h"
 
-#define ESCS_TICK_PERIOD_US 10
-#define ESCS_REP_PERIOD_US 20000
-#define ESCS_TICKS_PER_REP (ESCS_REP_PERIOD_US / ESCS_TICK_PERIOD_US)
-#define ESCS_TICKS_PER_SECOND (1000000 / ESCS_TICK_PERIOD_US)
-#define ESCS_TICKS_PER_MS (1000 / ESCS_TICK_PERIOD_US)
-
 #define ESCS_MASK_A _BV(ESCS_BIT_A)
 #define ESCS_MASK_B _BV(ESCS_BIT_B)
 #define ESCS_MASK_C _BV(ESCS_BIT_C)
@@ -33,7 +27,7 @@
 
     //    F_OVERFLOW = F_CPU / (PRESCALER * (1 + OCR0A))
     // => OCR0A = F_CPU / (PRESCALER * F_OVERFLOW) - 1
-    OCR0A = (uint8_t) (((uint32_t) F_CPU) / (((uint32_t) 1) * ((uint32_t) ESCS_TICKS_PER_SECOND)) - 1);
+    OCR0A = (uint8_t) (((uint32_t) F_CPU) / (((uint32_t) 1) * ((uint32_t) PWM_TICKS_PER_SECOND)) - 1);
   }
 #elif defined(__AVR_ATmega32U4__)
   #define ESCS_TIMER_INTERRUPT TIMER3_COMPA_vect
@@ -52,7 +46,7 @@
 
     //    F_OVERFLOW = F_CPU / (PRESCALER * (1 + OCR0A))
     // => OCR0A = F_CPU / (PRESCALER * F_OVERFLOW) - 1
-    OCR0A = (uint16_t) (((uint32_t) F_CPU) / (((uint32_t) 1) * ((uint32_t) ESCS_TICKS_PER_SECOND)) - 1);
+    OCR0A = (uint16_t) (((uint32_t) F_CPU) / (((uint32_t) 1) * ((uint32_t) PWM_TICKS_PER_SECOND)) - 1);
   }
 #else
   #error "Don't know how to set up timer on the target device. Please update escs.c."
@@ -87,7 +81,7 @@ ISR(ESCS_TIMER_INTERRUPT) {
     port_reg &= ~ESCS_MASK_D;
   }
   ticks++;
-  if (ticks == ESCS_TICKS_PER_REP) {
+  if (ticks == PWM_TICKS_PER_REP) {
     ticks = 0;
   }
   escs_ticks = ticks;
@@ -121,10 +115,10 @@ static float clamp(float x, float min, float max) {
 }
 
 void escs_update(rotor_speeds_t *rotor_speeds) {
-  const uint16_t level_a = ESCS_TICKS_PER_MS + (uint16_t) (((float) ESCS_TICKS_PER_MS) * clamp(rotor_speeds->a, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
-  const uint16_t level_b = ESCS_TICKS_PER_MS + (uint16_t) (((float) ESCS_TICKS_PER_MS) * clamp(rotor_speeds->b, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
-  const uint16_t level_c = ESCS_TICKS_PER_MS + (uint16_t) (((float) ESCS_TICKS_PER_MS) * clamp(rotor_speeds->c, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
-  const uint16_t level_d = ESCS_TICKS_PER_MS + (uint16_t) (((float) ESCS_TICKS_PER_MS) * clamp(rotor_speeds->d, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
+  const uint16_t level_a = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(rotor_speeds->a, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
+  const uint16_t level_b = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(rotor_speeds->b, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
+  const uint16_t level_c = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(rotor_speeds->c, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
+  const uint16_t level_d = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(rotor_speeds->d, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
   escs_levels.a = level_a;
   escs_levels.b = level_b;
   escs_levels.c = level_c;
