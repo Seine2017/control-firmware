@@ -17,26 +17,26 @@
 #define ESCS_MASK_ALL (ESCS_MASK_A | ESCS_MASK_B | ESCS_MASK_C | ESCS_MASK_D)
 
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
-  #define ESCS_TIMER_INTERRUPT TIMER2_OVF_vect
+  #define ESCS_TIMER_INTERRUPT TIMER2_COMPA_vect
   static void escs_init_timer() {
     // Set up timer 2:
     //   COM2A = 00 (OC2A disconnected)
     //   COM2B = 00 (OC2B disconnected)
     //   WGM2 = 010 (clear timer on compare match)
     //   CS2 = 001 (no prescaler)
-    //   OCIE2A = 0 (no interrupt on output compare match A)
+    //   OCIE2A = 1 (interrupt on output compare match A)
     //   OCIE2B = 0 (no interrupt on output compare match B)
-    //   TOIE2 = 1 (interrupt on timer overflow)
+    //   TOIE2 = 0 (no interrupt on timer overflow)
     TCCR2A = _BV(WGM21);
     TCCR2B = _BV(CS20);
-    TIMSK2 = _BV(TOIE2);
+    TIMSK2 = _BV(OCIE2A);
 
     //    F_OVERFLOW = F_CPU / (PRESCALER * (1 + OCR2A))
     // => OCR2A = F_CPU / (PRESCALER * F_OVERFLOW) - 1
     OCR2A = (uint8_t) (((uint32_t) F_CPU) / (((uint32_t) 1) * ((uint32_t) ESCS_TICKS_PER_SECOND)) - 1);
   }
 #elif defined(__AVR_ATmega32U4__)
-  #define ESCS_TIMER_INTERRUPT TIMER3_OVF_vect
+  #define ESCS_TIMER_INTERRUPT TIMER3_COMPA_vect
   static void escs_init_timer() {
     // Set up timer 3:
     //   COM3A = 00 (OC3A disconnected)
@@ -45,14 +45,14 @@
     //   WGM3 = 0100 (clear timer on compare match)
     //   CS3 = 001 (no prescaler)
     //   ICIE3 = 0 (no interrupt on input capture)
-    //   OCIE3A = 0 (no interrupt on output compare match A)
+    //   OCIE3A = 1 (interrupt on output compare match A)
     //   OCIE3B = 0 (no interrupt on output compare match B)
     //   OCIE3C = 0 (no interrupt on output compare match C)
-    //   TOIE3 = 1 (interrupt on timer overflow)
+    //   TOIE3 = 0 (no interrupt on timer overflow)
     TCCR3A = 0;
     TCCR3B = _BV(WGM32) | _BV(CS30);
     TCCR3C = 0;
-    TIMSK3 = _BV(TOIE3);
+    TIMSK3 = _BV(OCIE3A);
 
     //    F_OVERFLOW = F_CPU / (PRESCALER * (1 + OCR3A))
     // => OCR3A = F_CPU / (PRESCALER * F_OVERFLOW) - 1

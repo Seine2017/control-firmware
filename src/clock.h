@@ -31,9 +31,9 @@ static void clock_init() {
   //   COM0B = 00 (OC0B disconnected)
   //   WGM0 = 010 (clear timer on compare match)
   //   CS0 = 010 (prescaler = 8)
-  //   OCIE0A = 1 (no interrupt on output compare match A)
+  //   OCIE0A = 1 (interrupt on output compare match A)
   //   OCIE0B = 0 (no interrupt on output compare match B)
-  //   TOIE0 = 0 (interrupt on timer overflow)
+  //   TOIE0 = 0 (no interrupt on timer overflow)
   TCCR0A = _BV(WGM01);
   TCCR0B = _BV(CS01);
   TIMSK0 = _BV(OCIE0A);
