@@ -34,4 +34,17 @@
 #define GYRO_SENSITIVITY 131    // = 131 LSB/degrees/sec
 #define ACCEL_SENSITIVITY 16384 // = 16384 LSB/g
 
+// Allowable limits for rotor speeds (0.0 = 1ms pulse, 1.0 = 2ms pulse).
+#define MIN_ROTOR_SPEED 0.0
+#define MAX_ROTOR_SPEED 0.7
+
+// Specification of which pins on the microcontroller are connected to the PWM
+// inputs on the ESCS.
+#define ESCS_DDR DDRB
+#define ESCS_PORT PORTB
+#define ESCS_BIT_A PB0
+#define ESCS_BIT_B PB1
+#define ESCS_BIT_C PB2
+#define ESCS_BIT_D PB3
+
 #endif

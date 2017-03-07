@@ -10,6 +10,6 @@
 // Perform a full cycle of the control algorithm.
 void control_cycle(measured_state_t *measured_state,
                    desired_state_t *desired_state,
-                   duty_cycles_t *duty_cycles);
+                   rotor_speeds_t *rotor_speeds);
 
 #endif

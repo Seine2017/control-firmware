@@ -4,7 +4,7 @@
 #ifndef __ESCS_INTERFACE_H
 #define __ESCS_INTERFACE_H
 
-// A structure to hold the PWM duty cycles for each of the four rotors. All
+// A structure to hold the speeds for each of the four rotors. All
 // values are floats between 0.0 and 1.0.
 typedef struct {
   // Rotor A (front, left).
@@ -18,12 +18,12 @@ typedef struct {
 
   // Rotor D (rear, left).
   float d;
-} duty_cycles_t;
+} rotor_speeds_t;
 
 // Initialise the PWM outputs.
 void escs_init();
 
 // Set the new duty cycles for the ESCs.
-void escs_update(duty_cycles_t *duty_cycle);
+void escs_update(rotor_speeds_t *rotor_speeds);
 
 #endif

@@ -7,7 +7,7 @@
 // Perform a full cycle of the control algorithm.
 void control_cycle(measured_state_t *measured_state,
                    desired_state_t *desired_state,
-                   duty_cycles_t *duty_cycles) {
+                   rotor_speeds_t *rotor_speeds) {
 
   // Find time interval (dt) since last control cycle.
   static clock_time_t prev_time = 0;
@@ -54,9 +54,9 @@ void control_cycle(measured_state_t *measured_state,
     PID_GAIN_YAW_I,
     PID_GAIN_YAW_D);
 
-  // Combine contributions to produce duty cycles.
-  duty_cycles->a = z_factor + roll_factor - pitch_factor + yaw_factor;
-  duty_cycles->b = z_factor - roll_factor - pitch_factor - yaw_factor;
-  duty_cycles->c = z_factor - roll_factor + pitch_factor + yaw_factor;
-  duty_cycles->d = z_factor + roll_factor + pitch_factor - yaw_factor;
+  // Combine contributions to produce rotor speeds.
+  rotor_speeds->a = z_factor + roll_factor - pitch_factor + yaw_factor;
+  rotor_speeds->b = z_factor - roll_factor - pitch_factor - yaw_factor;
+  rotor_speeds->c = z_factor - roll_factor + pitch_factor + yaw_factor;
+  rotor_speeds->d = z_factor + roll_factor + pitch_factor - yaw_factor;
 }

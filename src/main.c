@@ -8,7 +8,7 @@
 int main() {
   measured_state_t measured_state;
   desired_state_t desired_state;
-  duty_cycles_t duty_cycles;
+  rotor_speeds_t rotor_speeds;
 
   clock_init();
   imu_init();
@@ -19,9 +19,9 @@ int main() {
     imu_read(&measured_state);
 
     // Run control algorithm.
-    control_cycle(&measured_state, &desired_state, &duty_cycles);
+    control_cycle(&measured_state, &desired_state, &rotor_speeds);
 
     // Update ESC duty cycles.
-    escs_update(&duty_cycles);
+    escs_update(&rotor_speeds);
   }
 }
