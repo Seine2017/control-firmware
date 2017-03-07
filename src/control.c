@@ -14,7 +14,7 @@ void control_cycle(measured_state_t *measured_state,
   const clock_time_t curr_time = clock_get_time();
   const clock_interval_t dt = clock_diff(prev_time, curr_time);
   prev_time = curr_time;
-  const float dt_float = ((float) dt) * ((float) SECONDS_PER_TICK);
+  const float dt_float = ((float) dt) * ((float) SECONDS_PER_CLOCK_TICK);
 
   // Compute the contributions towards vertical, roll, pitch and yaw movements.
   static pid_state_t z_pid_state = INITIAL_PID_STATE;

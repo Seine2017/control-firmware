@@ -24,23 +24,56 @@ typedef int16_t clock_interval_t;
 // The actual number of ticks that have passed since power on.
 extern volatile clock_time_t clock_now;
 
+#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
+  #define CLOCK_TIMER_INTERRUPT TIMER1_COMPA_vect
+  static void clock_init_timer() {
+    // Set up timer 1:
+    //   COM1A = 00 (OC1A disconnected)
+    //   COM1B = 00 (OC1B disconnected)
+    //   WGM1 = 0100 (clear timer on compare match)
+    //   CS1 = 001 (no prescaler)
+    //   OCIE1A = 1 (interrupt on output compare match A)
+    //   OCIE1B = 0 (no interrupt on output compare match B)
+    //   TOIE1 = 0 (no interrupt on timer overflow)
+    TCCR1A = 0;
+    TCCR1B = _BV(WGM12) | _BV(CS10);
+    TCCR1C = 0;
+    TIMSK1 = _BV(OCIE1A);
+
+    //    F_OVERFLOW = F_CPU / (PRESCALER * (1 + OCR1A))
+    // => OCR1A = F_CPU / (PRESCALER * F_OVERFLOW) - 1
+    OCR1A = (uint16_t) (((uint32_t) F_CPU) / (((uint32_t) 1) * ((uint32_t) CLOCK_TICKS_PER_SECOND)) - 1);
+  }
+#elif defined(__AVR_ATmega32U4__)
+  #define CLOCK_TIMER_INTERRUPT TIMER1_COMPA_vect
+  static void clock_init_timer() {
+    // Set up timer 1:
+    //   COM1A = 00 (OC1A disconnected)
+    //   COM1B = 00 (OC1B disconnected)
+    //   COM1C = 00 (OC1C disconnected)
+    //   WGM1 = 0100 (clear timer on compare match)
+    //   CS1 = 001 (no prescaler)
+    //   ICIE1 = 0 (no interrupt on input capture)
+    //   OCIE1A = 1 (interrupt on output compare match A)
+    //   OCIE1B = 0 (no interrupt on output compare match B)
+    //   OCIE1C = 0 (no interrupt on output compare match C)
+    //   TOIE1 = 0 (no interrupt on timer overflow)
+    TCCR1A = 0;
+    TCCR1B = _BV(WGM12) | _BV(CS10);
+    TCCR1C = 0;
+    TIMSK1 = _BV(OCIE1A);
+
+    //    F_OVERFLOW = F_CPU / (PRESCALER * (1 + OCR1A))
+    // => OCR1A = F_CPU / (PRESCALER * F_OVERFLOW) - 1
+    OCR1A = (uint16_t) (((uint32_t) F_CPU) / (((uint32_t) 1) * ((uint32_t) CLOCK_TICKS_PER_SECOND)) - 1);
+  }
+#else
+  #error "Don't know how to set up timer on the target device. Please update clock.h."
+#endif
+
 // Initialise the clock.
 static void clock_init() {
-  // Set up timer 0:
-  //   COM0A = 00 (OC0A disconnected)
-  //   COM0B = 00 (OC0B disconnected)
-  //   WGM0 = 010 (clear timer on compare match)
-  //   CS0 = 010 (prescaler = 8)
-  //   OCIE0A = 1 (interrupt on output compare match A)
-  //   OCIE0B = 0 (no interrupt on output compare match B)
-  //   TOIE0 = 0 (no interrupt on timer overflow)
-  TCCR0A = _BV(WGM01);
-  TCCR0B = _BV(CS01);
-  TIMSK0 = _BV(OCIE0A);
-
-  //    F_OVERFLOW = F_CPU / (PRESCALER * (1 + OCR0A))
-  // => OCR0A = F_CPU / (PRESCALER * F_OVERFLOW) - 1
-  OCR0A = (uint8_t) (((uint32_t) F_CPU) / (((uint32_t) 8) * ((uint32_t) TICKS_PER_SECOND)) - 1);
+  clock_init_timer();
 }
 
 // Check the current time.
