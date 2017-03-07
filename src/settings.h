@@ -10,7 +10,7 @@
 #define COMMUNICATIONS_PER_SECOND 10
 #define TICKS_PER_COMMUNICATION (TICKS_PER_SECOND / COMMUNICATIONS_PER_SECOND)
 
-// Y-factor PID parameters.
+// Z-factor PID parameters.
 #define PID_GAIN_Z_P 0
 #define PID_GAIN_Z_I 0
 #define PID_GAIN_Z_D 0
