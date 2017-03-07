@@ -41,6 +41,12 @@
 #define MIN_ROTOR_SPEED 0.0
 #define MAX_ROTOR_SPEED 0.7
 
+// Rotor speeds are filtered to reduce transients. The higher this parameter is,
+// the more filtering is applied (but the slower the rotors are to respond to
+// changes).
+// Range: 0.0 to 1.0
+#define ROTOR_SPEED_FILTERING 0.9
+
 // Specification of which pins on the microcontroller are connected to the PWM
 // inputs on the ESCS.
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)

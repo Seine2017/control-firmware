@@ -115,10 +115,17 @@ static float clamp(float x, float min, float max) {
 }
 
 void escs_update(rotor_speeds_t *rotor_speeds) {
-  const uint16_t level_a = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(rotor_speeds->a, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
-  const uint16_t level_b = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(rotor_speeds->b, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
-  const uint16_t level_c = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(rotor_speeds->c, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
-  const uint16_t level_d = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(rotor_speeds->d, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
+  // Filter rotor speeds to eliminate sudden changes.
+  static float filtered_a = 0.0, filtered_b = 0.0, filtered_c = 0.0, filtered_d = 0.0;
+  filtered_a = ROTOR_SPEED_FILTERING*filtered_a + (1.0-ROTOR_SPEED_FILTERING)*rotor_speeds->a;
+  filtered_b = ROTOR_SPEED_FILTERING*filtered_b + (1.0-ROTOR_SPEED_FILTERING)*rotor_speeds->b;
+  filtered_c = ROTOR_SPEED_FILTERING*filtered_c + (1.0-ROTOR_SPEED_FILTERING)*rotor_speeds->c;
+  filtered_d = ROTOR_SPEED_FILTERING*filtered_d + (1.0-ROTOR_SPEED_FILTERING)*rotor_speeds->d;
+
+  const uint16_t level_a = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(filtered_a, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
+  const uint16_t level_b = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(filtered_b, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
+  const uint16_t level_c = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(filtered_c, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
+  const uint16_t level_d = PWM_TICKS_PER_MS + (uint16_t) (((float) PWM_TICKS_PER_MS) * clamp(filtered_d, MIN_ROTOR_SPEED, MAX_ROTOR_SPEED));
   escs_levels.a = level_a;
   escs_levels.b = level_b;
   escs_levels.c = level_c;
