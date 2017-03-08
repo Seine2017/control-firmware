@@ -1,7 +1,7 @@
 # Board type (uno, promicro, nano):
-BOARD = promicro
+BOARD = nano
 # Name of microcontroller (atmega328p, atmega32u4):
-MCU = atmega32u4
+MCU = atmega328p
 # Microcontroller clock frequency (Hz).
 F_CPU = 16000000
 
