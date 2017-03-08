@@ -116,7 +116,7 @@ static void read_IMU_id(void){
     }
     if (id != IMU_ID) {
     	char message[32];
-    	snprintf(message, 32, "unexpected ID; received %d", id);
+    	snprintf(message, 32, "unexpected ID; received 0x%02X", id);
     	error(ERROR_BAD_IMU_ID, message);
     }
 }
