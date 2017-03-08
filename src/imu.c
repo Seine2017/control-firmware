@@ -11,6 +11,7 @@
 #include "error.h"
 #include "settings.h"
 #include "math.h"
+#include "clock.h"
 
 // Define variables to be used by the imu library
 uint8_t state;
@@ -400,8 +401,12 @@ void imu_read(measured_state_t *destination){
 	// It seems to bemore accurate, however, coupling between angles is not taken into account
 	// or I am doing something wrong
 
-	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z);
+	static clock_time_t prev_time = 0;
+	clock_time_t curr_time = clock_get_time();
+	float dt = ((float) clock_diff(prev_time, curr_time)) * ((float) SECONDS_PER_CLOCK_TICK);
+	prev_time = curr_time;
 
+	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z, dt);
 	destination->roll = acosf(q0/sqrtf(q0*q0+q2*q2))*2.0f;
 	destination->pitch = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
 	destination->yaw_vel = gyro_z;
