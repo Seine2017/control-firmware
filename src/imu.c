@@ -1,17 +1,18 @@
 // This file difines all the functions that are necessary to
 // interface with the IMU. It assumes debug.h library included
 
-#include <stdio.h>
 #include <avr/io.h>
+#include <math.h>
+#include <stdio.h>
 #include <util/delay.h>
+
+#include "clock.h"
+#include "error.h"
 #include "I2C.h"
+#include "imu_interface.h"
 #include "imu_reg.h"
 #include "MadgwickAHRS.h"
-#include "imu_interface.h"
-#include "error.h"
 #include "settings.h"
-#include "math.h"
-#include "clock.h"
 
 // Define variables to be used by the imu library
 uint8_t state;
