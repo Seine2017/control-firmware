@@ -11,7 +11,7 @@
 #define ESCS_MASK_ALL (ESCS_MASK_A | ESCS_MASK_B | ESCS_MASK_C | ESCS_MASK_D)
 
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
-  #define ESCS_TIMER_INTERRUPT TIMER2_COMPA_vect
+  #define ESCS_TIMER_INTERRUPT TIMER0_COMPA_vect
   static void escs_init_timer() {
     // Set up timer 0:
     //   COM0A = 00 (OC0A disconnected)
@@ -30,7 +30,7 @@
     OCR0A = (uint8_t) (((uint32_t) F_CPU) / (((uint32_t) 1) * ((uint32_t) PWM_TICKS_PER_SECOND)) - 1);
   }
 #elif defined(__AVR_ATmega32U4__)
-  #define ESCS_TIMER_INTERRUPT TIMER3_COMPA_vect
+  #define ESCS_TIMER_INTERRUPT TIMER0_COMPA_vect
   static void escs_init_timer() {
     // Set up timer 0:
     //   COM0A = 00 (OC0A disconnected)

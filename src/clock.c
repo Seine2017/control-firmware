@@ -11,6 +11,6 @@
 volatile clock_time_t clock_now = 0;
 
 // Interrupt vector for hardware timer overflow.
-ISR(TIMER0_COMPA_vect) {
+ISR(CLOCK_TIMER_INTERRUPT) {
   clock_now++;
 }
