@@ -10,6 +10,7 @@
 #include "imu_interface.h"
 #include "error.h"
 #include "settings.h"
+#include "math.h"
 
 // Define variables to be used by the imu library
 uint8_t state;
@@ -72,7 +73,9 @@ static uint8_t read_IMU_byte(uint8_t IMU_address, uint8_t address, uint8_t *data
 static uint8_t read_IMU_bytes(uint8_t IMU_address, uint8_t address, uint8_t count, uint8_t * data){
 	uint8_t IMU_address_write = (IMU_address << 1);
 	uint8_t IMU_address_read = (IMU_address << 1) | 0x01;
-
+	
+	int i;
+	
 	transmit_START();
 	//if(read_I2C_status() != ???)
 	//	return ERROR;
@@ -88,7 +91,7 @@ static uint8_t read_IMU_bytes(uint8_t IMU_address, uint8_t address, uint8_t coun
 	write_8bit_data(IMU_address_read);
 	//if(read_I2C_status() != ???)
 	//	return ERROR;
-    for(int i = 0; i < count-1; i++){
+    for(i = 0; i < count-1; i++){
      *data++ = read_8bit_data_with_ack();
      //if(read_I2C_status() != ???)
      //	return ERROR;
@@ -400,5 +403,6 @@ void imu_read(measured_state_t *destination){
 	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z);
 	destination->roll = (acosf(q0/sqrtf(q0*q0+q2*q2))*2.0f)*180/3.14;
 	destination->pitch = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2))*180/3.14;
+	destination->yaw_vel = gyro_z;
 }
 
