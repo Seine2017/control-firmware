@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <avr/io.h>
 
-#define DEBUG_BAUD  9600
+#define DEBUG_BAUD  57600
 
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
 
