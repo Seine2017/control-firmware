@@ -14,7 +14,7 @@ CFLAGS = -O2 -Wall -Wno-unused-function -mmcu=$(MCU)
 # Name of linker:
 LD = avr-gcc
 # Flags passed to linker:
-LDFLAGS = -mmcu=$(MCU)
+LDFLAGS = -mmcu=$(MCU) -Wl,-u,vfprintf -lprintf_flt
 # Name of objcopy tool:
 OBJCOPY = avr-objcopy
 # Name of size tool:
