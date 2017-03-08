@@ -415,8 +415,8 @@ void imu_read(measured_state_t *destination){
 
 	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z, dt);
 
-	destination->roll = acosf(q0/sqrtf(q0*q0+q2*q2))*2.0f;
-	destination->pitch = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
+	destination->roll = asinf(2*(q0*q2-q1*q3));
+	destination->pitch = -atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
 	destination->yaw_vel = gyro_z;
 
 	// Vertical component of acceleration.
