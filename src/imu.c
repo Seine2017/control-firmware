@@ -398,7 +398,7 @@ void imu_read(measured_state_t *destination){
 	// or I am doing something wrong
 
 	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z);
-	destination->roll = (acosf(q0/sqrtf(q0*q0+q2*q2))*2.0f)*180/3.14;
-	destination->pitch = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2))*180/3.14;
+	destination->roll = acosf(q0/sqrtf(q0*q0+q2*q2))*2.0f;
+	destination->pitch = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
 }
 
