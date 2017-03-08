@@ -51,22 +51,27 @@
 
 // Specification of which pins on the microcontroller are connected to the PWM
 // inputs on the ESCS.
-#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
-  // Arduino Uno (or compatible).
+#if defined(BOARD_uno)
   #define ESCS_DDR DDRD
   #define ESCS_PORT PORTD
-  #define ESCS_BIT_A PD7 // Arduino pin 7
-  #define ESCS_BIT_B PD6 // Arduino pin 6
-  #define ESCS_BIT_C PD5 // Arduino pin 5
-  #define ESCS_BIT_D PD4 // Arduino pin 4
-#elif defined(__AVR_ATmega32U4__)
-  // Arduino Pro Micro.
+  #define ESCS_BIT_A PD4 // Arduino pin 4
+  #define ESCS_BIT_B PD5 // Arduino pin 5
+  #define ESCS_BIT_C PD6 // Arduino pin 6
+  #define ESCS_BIT_D PD7 // Arduino pin 7
+#elif defined(BOARD_promicro)
   #define ESCS_DDR DDRF
   #define ESCS_PORT PORTF
   #define ESCS_BIT_A PF7 // Arduino pin A0
   #define ESCS_BIT_B PF6 // Arduino pin A1
   #define ESCS_BIT_C PF5 // Arduino pin A2
   #define ESCS_BIT_D PF4 // Arduino pin A3
+#elif defined(BOARD_nano)
+  #define ESCS_DDR DDRD
+  #define ESCS_PORT PORTD
+  #define ESCS_BIT_A PD4 // Arduino pin 4
+  #define ESCS_BIT_B PD5 // Arduino pin 5
+  #define ESCS_BIT_C PD6 // Arduino pin 6
+  #define ESCS_BIT_D PD7 // Arduino pin 7
 #else
   #error "Don't know how to set up pin definitions on the target device. Please update settings.h."
 #endif
