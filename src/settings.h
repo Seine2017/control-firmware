@@ -35,6 +35,10 @@
 #define PID_GAIN_YAW_I 0
 #define PID_GAIN_YAW_D 0
 
+// Accelerometer/gyroscope "who am I" ID.
+#define IMU_ID 0x71 // Grove IMU
+//#define IMU_ID 0x73 // Pawel's IMU
+
 // IMU sensor sensitivities.
 #define GYRO_SENSITIVITY 131    // = 131 LSB/degrees/sec
 #define ACCEL_SENSITIVITY 16384 // = 16384 LSB/g

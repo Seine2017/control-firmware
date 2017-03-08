@@ -114,7 +114,7 @@ static void read_IMU_id(void){
     if (state == ERROR) {
       error(ERROR_I2C, "I2C error");
     }
-    if (id != 0x73) {
+    if (id != IMU_ID) {
     	char message[32];
     	snprintf(message, 32, "unexpected ID; received %d", id);
     	error(ERROR_BAD_IMU_ID, message);
