@@ -1,6 +1,8 @@
 #ifndef __ERROR_H
 #define __ERROR_H
 
+#include <stdio.h>
+
 typedef uint8_t error_code_t;
 
 // Error code constants:
@@ -12,8 +14,7 @@ typedef uint8_t error_code_t;
 #define ERROR_BAD_IMU_ID ((error_code_t) 2)
 
 static void error(error_code_t code, const char *message) {
-  //TODO: set up serial connection
-  //printf("ERROR %d: %s\n", code, message);
+  printf("ERROR %d: %s\n", code, message);
 }
 
 #endif
