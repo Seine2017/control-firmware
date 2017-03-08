@@ -1,4 +1,5 @@
 #include <avr/interrupt.h>
+#include <avr/wdt.h>
 
 #include "clock.h"
 #include "comms_interface.h"
@@ -13,6 +14,13 @@ int main() {
   desired_state_t desired_state;
   rotor_speeds_t rotor_speeds;
 
+  // Disable interrupts during setup.
+  cli();
+
+  // Disable watchdog timer.
+  wdt_disable();
+
+  // Initialise modules.
   init_debug_uart0();
   clock_init();
   imu_init();
