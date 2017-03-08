@@ -6,12 +6,14 @@
 #include "escs_interface.h"
 #include "imu_interface.h"
 #include "settings.h"
+#include "debug.h"
 
 int main() {
   measured_state_t measured_state;
   desired_state_t desired_state;
   rotor_speeds_t rotor_speeds;
 
+  init_debug_uart0();
   clock_init();
   imu_init();
   escs_init();

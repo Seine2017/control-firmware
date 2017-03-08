@@ -20,7 +20,7 @@ OBJCOPY = avr-objcopy
 # Name of size tool:
 SIZE = avr-size
 
-SOURCES = src/main.c src/control.c src/clock.c src/escs.c src/imu.c src/MadgwickAHRS.c
+SOURCES = src/main.c src/control.c src/clock.c src/escs.c src/imu.c src/MadgwickAHRS.c src/debug.c
 OBJECTS = $(SOURCES:.c=.o)
 
 all: control-firmware.hex
