@@ -410,5 +410,12 @@ void imu_read(measured_state_t *destination){
 	destination->roll = acosf(q0/sqrtf(q0*q0+q2*q2))*2.0f;
 	destination->pitch = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
 	destination->yaw_vel = gyro_z;
+
+	// Vertical component of acceleration.
+	float vert_accel = 2*(q1*q3-q2*q0)*accel_x + 2*(q2*q3+q1*q0)*accel_y + (1-2*q1*q1-2*q2*q2)*accel_z;
+	// Integrate to get vertical velocity.
+	static float vert_vel = 0.0;
+	vert_vel += vert_accel * dt;
+	destination->z_vel = vert_vel;
 }
 
