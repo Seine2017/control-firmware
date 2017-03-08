@@ -421,6 +421,10 @@ void imu_read(measured_state_t *destination){
 
 	// Vertical component of acceleration.
 	float vert_accel = 2*(q1*q3-q2*q0)*accel_x + 2*(q2*q3+q1*q0)*accel_y + (1-2*q1*q1-2*q2*q2)*accel_z;
+	// Correct for gravity.
+	vert_accel -= 1.0;
+	// Convert from g to m/s^2.
+	vert_accel *= 9.81;
 	// Integrate to get vertical velocity.
 	static float vert_vel = 0.0;
 	vert_vel += vert_accel * dt;
