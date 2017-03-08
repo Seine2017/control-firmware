@@ -413,7 +413,7 @@ void imu_read(measured_state_t *destination){
 	float dt = ((float) clock_diff(prev_time, curr_time)) * ((float) SECONDS_PER_CLOCK_TICK);
 	prev_time = curr_time;
 
-	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z);
+	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z, dt);
 
 	destination->roll = acosf(q0/sqrtf(q0*q0+q2*q2))*2.0f;
 	destination->pitch = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
