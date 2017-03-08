@@ -228,8 +228,8 @@ static void calibrate_IMU(void){
 	gyro_bias[1]  /= (int32_t) packet_count;
 	gyro_bias[2]  /= (int32_t) packet_count;
 
-	if(accel_bias[2] > 0L) {accel_bias[2] -= (int32_t) ACCEL_SENSITIVITY;}  // Remove gravity from the z-axis accelerometer bias calculation
-	else {accel_bias[2] += (int32_t) ACCEL_SENSITIVITY;}
+	if(accel_bias[2] > 0L) {accel_bias[2] -= (int32_t) 16384;}  // Remove gravity from the z-axis accelerometer bias calculation
+	else {accel_bias[2] += (int32_t) 16384;}
 
 	// Construct the gyro biases for push to the hardware gyro bias registers, which are reset to zero upon device startup
 	data[0] = (-gyro_bias[0]/4  >> 8) & 0xFF; // Divide by 4 to get 32.9 LSB per deg/s to conform to expected bias input format

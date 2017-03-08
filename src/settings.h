@@ -40,8 +40,8 @@
 //#define IMU_ID 0x73 // Pawel's IMU
 
 // IMU sensor sensitivities.
-#define GYRO_SENSITIVITY 131    // = 131 LSB/degrees/sec
-#define ACCEL_SENSITIVITY 16384 // = 16384 LSB/g
+#define GYRO_SENSITIVITY 65.5    // = 65.5 LSB/degrees/sec
+#define ACCEL_SENSITIVITY 4096 // = 4096 LSB/g (8g range)
 
 // Allowable limits for rotor speeds (0.0 = 1ms pulse, 1.0 = 2ms pulse).
 #define MIN_ROTOR_SPEED 0.0
