@@ -384,6 +384,11 @@ void imu_read(measured_state_t *destination){
 	float accel_y = (int)accel_raw[1]/(float)ACCEL_SENSITIVITY;//-accelBias[1];
 	float accel_z = (int)accel_raw[2]/(float)ACCEL_SENSITIVITY;//-accelBias[2];
 
+	// Degrees to radians
+	gyro_x *= M_PI/180.0;
+	gyro_y *= M_PI/180.0;
+	gyro_z *= M_PI/180.0;
+
 	/*
 	// Integration of the roll and pitch
 	// divide by 250Hz, equivalent to multiplying by 4ms
