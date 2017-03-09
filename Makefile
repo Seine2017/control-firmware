@@ -39,4 +39,4 @@ clean:
 	rm -f *.hex *.elf src/*.o
 
 flash:
-	avrdude -p$(MCU) -cc232hm -P/dev/ttyUSB0 -b57600 -U flash:w:control-firmware.hex:i
+	avrdude -p$(MCU) -carduino -P/dev/ttyACM0 -b115200 -U flash:w:control-firmware.hex:i
