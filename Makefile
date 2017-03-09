@@ -10,7 +10,7 @@ CC = avr-gcc
 # Flags passed to C preprocessor:
 CPPFLAGS = -Isrc -DF_CPU=$(F_CPU) -DBOARD_$(BOARD)=1
 # Flags passed to C compiler:
-CFLAGS = -O2 -Wall -Wno-unused-function -mmcu=$(MCU)
+CFLAGS = -O3 -Wall -Wno-unused-function -mmcu=$(MCU)
 # Name of linker:
 LD = avr-gcc
 # Flags passed to linker:
