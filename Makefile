@@ -30,7 +30,7 @@ control-firmware.hex: control-firmware.elf
 	$(SIZE) $@
 
 control-firmware.elf: $(OBJECTS)
-	$(LD) $(LDFLAGS) -o $@ $^
+	$(LD) -lc -lm $(LDFLAGS) -o $@ $^ -lc
 
 *.o: *.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $<
