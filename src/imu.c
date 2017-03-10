@@ -426,8 +426,8 @@ void imu_read(measured_state_t *destination){
 	// Convert from g to m/s^2.
 	vert_accel *= 9.81;
 	// Integrate to get vertical velocity.
-	static float vert_vel = 0.0;
-	vert_vel += vert_accel * dt;
-	destination->z_vel = vert_vel;
+	// static float vert_vel = 0.0;
+	// vert_vel += vert_accel * dt;
+	destination->z_accel = vert_accel;
 }
 

@@ -56,12 +56,12 @@
 // Specification of which pins on the microcontroller are connected to the PWM
 // inputs on the ESCS.
 #if defined(BOARD_uno)
-  #define ESCS_DDR DDRD
-  #define ESCS_PORT PORTD
-  #define ESCS_BIT_A PD4 // Arduino pin 4
-  #define ESCS_BIT_B PD5 // Arduino pin 5
-  #define ESCS_BIT_C PD6 // Arduino pin 6
-  #define ESCS_BIT_D PD7 // Arduino pin 7
+  #define ESCS_DDR DDRC
+  #define ESCS_PORT PORTC
+  #define ESCS_BIT_A PC0 // Arduino pin A0
+  #define ESCS_BIT_B PC1 // Arduino pin A1
+  #define ESCS_BIT_C PC2 // Arduino pin A2
+  #define ESCS_BIT_D PC3 // Arduino pin A3
 #elif defined(BOARD_promicro)
   #define ESCS_DDR DDRF
   #define ESCS_PORT PORTF

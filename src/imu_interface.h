@@ -16,9 +16,9 @@
 //   y axis: points in the direction of thrust ("upwards")
 //   z axis: points directly between rotors B and C ("to the right")
 typedef struct {
-  // Velocity along the world frame Z axis. Positive indicates upwards (away
+  // Acceleration along the world frame Z axis. Positive indicates upwards (away
   // from the ground). Units are metres/second.
-  float z_vel;
+  float z_accel;
 
   // Roll angle (rotation about the body frame X axis). Positive indicates
   // rolling to the right (the right-hand side of the vehicle is lower than the

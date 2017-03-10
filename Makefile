@@ -1,5 +1,5 @@
 # Board type (uno, promicro, nano):
-BOARD = nano
+BOARD = uno
 # Name of microcontroller (atmega328p, atmega32u4):
 MCU = atmega328p
 # Microcontroller clock frequency (Hz).
@@ -14,7 +14,7 @@ CFLAGS = -O3 -Wall -Wno-unused-function -mmcu=$(MCU)
 # Name of linker:
 LD = avr-gcc
 # Flags passed to linker:
-LDFLAGS = -mmcu=$(MCU) -Wl,-u,vfprintf -lprintf_flt
+LDFLAGS = -mmcu=$(MCU)
 # Name of objcopy tool:
 OBJCOPY = avr-objcopy
 # Name of size tool:
@@ -30,7 +30,7 @@ control-firmware.hex: control-firmware.elf
 	$(SIZE) $@
 
 control-firmware.elf: $(OBJECTS)
-	$(LD) -lc -lm $(LDFLAGS) -o $@ $^ -lc
+	$(LD) $(LDFLAGS) -o $@ $^ -Wl,-u,vfprintf -lprintf_flt
 
 *.o: *.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $<
@@ -39,4 +39,4 @@ clean:
 	rm -f *.hex *.elf src/*.o
 
 flash:
-	avrdude -p$(MCU) -cc232hm -P/dev/ttyUSB0 -b57600 -U flash:w:control-firmware.hex:i
+	avrdude -p$(MCU) -carduino -P/dev/ttyUSB0 -b115200 -U flash:w:control-firmware.hex:i
