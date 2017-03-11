@@ -18,7 +18,7 @@
 typedef struct {
   // Acceleration along the world frame Z axis. Positive indicates upwards (away
   // from the ground). Units are metres/second.
-  float z_accel;
+  float z_vel;
 
   // Roll angle (rotation about the body frame X axis). Positive indicates
   // rolling to the right (the right-hand side of the vehicle is lower than the

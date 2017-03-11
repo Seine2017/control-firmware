@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <avr/interrupt.h>
 #include <avr/io.h>
 
@@ -130,4 +132,6 @@ void escs_update(rotor_speeds_t *rotor_speeds) {
   escs_levels.b = level_b;
   escs_levels.c = level_c;
   escs_levels.d = level_d;
+
+  //printf("a: raw=%f, filtered=%f, level=%d\n", rotor_speeds->a, filtered_a, level_a);
 }
