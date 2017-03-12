@@ -54,7 +54,7 @@ int main() {
   escs_init();
   escs_update(&rotor_speeds);
   imu_init();
-  //comms_slave_init();
+  comms_slave_init();
 
   printf("Ready!\n");
 
@@ -71,8 +71,10 @@ int main() {
     imu_read(&measured_state);
     convert_logg_packet(&measured_state);
 
+    //printf("%f,%f,%f\n", measured_state.roll, measured_state.pitch, measured_state.yaw_vel);
+
     // Run control algorithm.
-    //convert_rc_packet(&desired_state);
+    convert_rc_packet(&desired_state);
     control_cycle(&measured_state, &desired_state, &rotor_speeds);
 
     // Update ESC duty cycles.

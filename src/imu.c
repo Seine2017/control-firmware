@@ -468,7 +468,5 @@ void imu_read(measured_state_t *destination){
 	float z_accel = get_vert_accel(accel_x, accel_y, accel_z);
 	z_vel += dt * z_accel * 50.0;
 	destination->z_vel = z_vel;
-
-	printf("z_accel=%f z_vel=%f\n", z_accel, z_vel);
 }
 
