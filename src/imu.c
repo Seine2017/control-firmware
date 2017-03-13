@@ -454,7 +454,7 @@ void imu_read(measured_state_t *destination){
 	}
 	prev_time = curr_time;
 
-	printf("gx=%f gy=%f ax=%f ay=%f\n", gyro_x, gyro_y, accel_x, accel_y);
+	printf("gx=%f gy=%f ax=%f ay=%f az=%f\n", gyro_x, gyro_y, accel_x, accel_y, accel_z);
 
 	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z, dt);
 
