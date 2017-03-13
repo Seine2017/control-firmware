@@ -23,6 +23,8 @@ float gyroBias[3] = {0, 0, 0}, accelBias[3] = {0, 0, 0};
 uint16_t accel_raw[3]; //possibly can be deined in the imu_read function
 uint16_t gyro_raw[3];
 
+float vert_accel_offset = 0.0;
+
 // Variables
 //float pitch = 0, roll = 0, pitch_accel = 0, roll_accel = 0;
 
@@ -145,8 +147,8 @@ static void read_raw_gyro(uint16_t *gyro){
 	read_IMU_bytes(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_GYRO_XOUT_H,6, &raw_gyro[0]);
 
 
-	gyro[0] = (((uint16_t)raw_gyro[0]<<8)|raw_gyro[1]);
-	gyro[1] = (((uint16_t)raw_gyro[2]<<8)|raw_gyro[3]);
+	gyro[0] = -(((uint16_t)raw_gyro[0]<<8)|raw_gyro[1]);
+	gyro[1] = -(((uint16_t)raw_gyro[2]<<8)|raw_gyro[3]);
 	gyro[2] = (((uint16_t)raw_gyro[4]<<8)|raw_gyro[5]);
 }
 
@@ -155,9 +157,8 @@ static void read_raw_accel(uint16_t *accel){
 	read_IMU_bytes(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_ACCEL_XOUT_H,6 , &raw_accel[0]);
 
 	accel[0] = (((uint16_t)raw_accel[0]<<8)|raw_accel[1]);
-	accel[1]= (((uint16_t)raw_accel[2]<<8)|raw_accel[3]);
+	accel[1] = -(((uint16_t)raw_accel[2]<<8)|raw_accel[3]);
 	accel[2] = (((uint16_t)raw_accel[4]<<8)|raw_accel[5]);
-
 }
 
 // void calibrate_IMU(float * gyroBias, float * accelBias)
@@ -319,6 +320,30 @@ static void reset_IMU(){
 	_delay_ms(100);// Delay 100 ms
 }
 
+static float get_vert_accel(float accel_x, float accel_y, float accel_z) {
+	// Vertical component of acceleration.
+	float vert_accel = 2*(q1*q3-q2*q0)*accel_x + 2*(q2*q3+q1*q0)*accel_y + (1-2*q1*q1-2*q2*q2)*accel_z;
+	// Correct for gravity.
+	vert_accel -= 1.0;
+	// Convert from g to m/s^2.
+	vert_accel *= 9.81;
+	vert_accel -= vert_accel_offset;
+
+	// Lowpass:
+	// static float prev_vert_accel = 0.0;
+	// vert_accel = 0.95*prev_vert_accel + 0.05*vert_accel;
+
+	// Highpass:
+	static float prev_vert_accel_i = 0.0;
+	static float prev_vert_accel_o = 0.0;
+	float vert_accel_o = 0.5 * (prev_vert_accel_o + vert_accel - prev_vert_accel_i);
+	prev_vert_accel_i = vert_accel;
+	prev_vert_accel_o = vert_accel_o;
+	vert_accel = vert_accel_o;
+
+	return vert_accel;
+}
+
 void imu_init(){
 
 	//initialize I2C
@@ -371,6 +396,19 @@ void imu_init(){
 	//write_IMU_byte(MPU9250_DEFAULT_ADDRESS, 0x38, 0x01);  // Enable data ready (bit 0) interrupt
 	//_delay_ms(100);
 
+	const int n = 128;
+	float total = 0.0;
+	int i;
+	for (i = 0; i < n; i++) {
+		read_raw_accel(&accel_raw[0]);
+		float accel_x = (int)accel_raw[0]/(float)ACCEL_SENSITIVITY;//-accelBias[0];
+		float accel_y = (int)accel_raw[1]/(float)ACCEL_SENSITIVITY;//-accelBias[1];
+		float accel_z = (int)accel_raw[2]/(float)ACCEL_SENSITIVITY;//-accelBias[2];
+		total += get_vert_accel(accel_x, accel_y, accel_z);
+	}
+	vert_accel_offset = total / ((float) n);
+
+	printf("offset=%f\n", vert_accel_offset);
 }
 // This function has to be executed at 250Hz frequeny (every 4ms)
 void imu_read(measured_state_t *destination){
@@ -410,24 +448,23 @@ void imu_read(measured_state_t *destination){
 
 	static clock_time_t prev_time = 0;
 	clock_time_t curr_time = clock_get_time();
-	float dt = ((float) clock_diff(prev_time, curr_time)) * ((float) SECONDS_PER_CLOCK_TICK);
+	float dt = 0.0;
+	if (prev_time != 0) {
+		dt = ((float) clock_diff(prev_time, curr_time)) * ((float) SECONDS_PER_CLOCK_TICK);
+	}
 	prev_time = curr_time;
+
+	printf("gx=%f gy=%f ax=%f ay=%f\n", gyro_x, gyro_y, accel_x, accel_y);
 
 	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z, dt);
 
-	destination->roll = asinf(2*(q0*q2-q1*q3));
-	destination->pitch = -atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
+	destination->roll = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
+	destination->pitch = asinf(2*(q0*q2-q1*q3));
 	destination->yaw_vel = gyro_z;
 
-	// Vertical component of acceleration.
-	float vert_accel = 2*(q1*q3-q2*q0)*accel_x + 2*(q2*q3+q1*q0)*accel_y + (1-2*q1*q1-2*q2*q2)*accel_z;
-	// Correct for gravity.
-	vert_accel -= 1.0;
-	// Convert from g to m/s^2.
-	vert_accel *= 9.81;
-	// Integrate to get vertical velocity.
-	static float vert_vel = 0.0;
-	vert_vel += vert_accel * dt;
-	destination->z_vel = vert_vel;
+	static float z_vel = 0.0;
+	float z_accel = get_vert_accel(accel_x, accel_y, accel_z);
+	z_vel += dt * z_accel * 50.0;
+	destination->z_vel = z_vel;
 }
 

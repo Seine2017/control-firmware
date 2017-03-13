@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "clock.h"
 #include "control.h"
 #include "imu_interface.h"
@@ -21,42 +23,67 @@ void control_cycle(measured_state_t *measured_state,
   static pid_state_t roll_pid_state = INITIAL_PID_STATE;
   static pid_state_t pitch_pid_state = INITIAL_PID_STATE;
   static pid_state_t yaw_pid_state = INITIAL_PID_STATE;
-  const float z_factor = pid_cycle(
-    desired_state->z_vel,  // Desired Z velocity.
-    measured_state->z_vel, // Actual (measured) Z velocity.
+  float z_factor = pid_cycle(
+    desired_state->z_vel,  // Desired Z acceleration.
+    measured_state->z_vel, // Actual (measured) Z acceleration.
     &z_pid_state,          // Structure in which to hold the PID controller's state.
     dt_float,              // The time that has passed since the last control cycle.
     PID_GAIN_Z_P,          // Proportional gain constant.
     PID_GAIN_Z_I,          // Integral gain constant.
-    PID_GAIN_Z_D);         // Derivative gain constant.
-  const float roll_factor = pid_cycle(
+    PID_GAIN_Z_D,          // Derivative gain constant.
+    MIN_INTEGRAL_Z,
+    MAX_INTEGRAL_Z);
+  float roll_factor = pid_cycle(
     desired_state->roll,
     measured_state->roll,
     &roll_pid_state,
     dt_float,
     PID_GAIN_ROLL_P,
     PID_GAIN_ROLL_I,
-    PID_GAIN_ROLL_D);
-  const float pitch_factor = pid_cycle(
+    PID_GAIN_ROLL_D,
+    MIN_INTEGRAL_ROLL,
+    MAX_INTEGRAL_ROLL);
+  float pitch_factor = pid_cycle(
     desired_state->pitch,
     measured_state->pitch,
     &pitch_pid_state,
     dt_float,
     PID_GAIN_PITCH_P,
     PID_GAIN_PITCH_I,
-    PID_GAIN_PITCH_D);
-  const float yaw_factor = pid_cycle(
+    PID_GAIN_PITCH_D,
+    MIN_INTEGRAL_PITCH,
+    MAX_INTEGRAL_PITCH);
+  float yaw_factor = pid_cycle(
     desired_state->yaw_vel,
     measured_state->yaw_vel,
     &yaw_pid_state,
     dt_float,
     PID_GAIN_YAW_P,
     PID_GAIN_YAW_I,
-    PID_GAIN_YAW_D);
+    PID_GAIN_YAW_D,
+    MIN_INTEGRAL_YAW,
+    MAX_INTEGRAL_YAW);
+
+  //static float t = 0.0;
+  // z_factor = desired_state->z_vel*0.1;
+  // roll_factor = desired_state->roll*0.01;
+  // pitch_factor = desired_state->pitch*0.01;
+  // yaw_factor = desired_state->yaw_vel*0.1;
+  z_factor = 0.15;
+  //roll_factor = 0.0;
+  //pitch_factor = 0.0;
+  yaw_factor = 0.0;
+  //t += 0.00001;
+
+  //printf("LOG %f,%f,%f\n", dt_float, z_factor, measured_state->z_vel);
+
+  //printf("z_vel error=%f-%f zfactor=%f\n", desired_state->z_vel, measured_state->z_vel, z_factor);
+
+  //printf("r=%f p=%f zf=%f rf=%f pf=%f yf=%f\n", measured_state->roll, measured_state->pitch, z_factor, roll_factor, pitch_factor, yaw_factor);
 
   // Combine contributions to produce rotor speeds.
-  rotor_speeds->a = z_factor + roll_factor - pitch_factor + yaw_factor;
-  rotor_speeds->b = z_factor - roll_factor - pitch_factor - yaw_factor;
-  rotor_speeds->c = z_factor - roll_factor + pitch_factor + yaw_factor;
-  rotor_speeds->d = z_factor + roll_factor + pitch_factor - yaw_factor;
+  rotor_speeds->a = 0.0 + z_factor + roll_factor - pitch_factor + yaw_factor;
+  rotor_speeds->b = 0.0 + z_factor - roll_factor - pitch_factor - yaw_factor;
+  rotor_speeds->c = 0.0 + z_factor - roll_factor + pitch_factor + yaw_factor;
+  rotor_speeds->d = 0.0 + z_factor + roll_factor + pitch_factor - yaw_factor;
 }

@@ -16,7 +16,7 @@
 //   y axis: points in the direction of thrust ("upwards")
 //   z axis: points directly between rotors B and C ("to the right")
 typedef struct {
-  // Velocity along the world frame Z axis. Positive indicates upwards (away
+  // Acceleration along the world frame Z axis. Positive indicates upwards (away
   // from the ground). Units are metres/second.
   float z_vel;
 
