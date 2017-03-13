@@ -64,21 +64,18 @@ void control_cycle(measured_state_t *measured_state,
     MIN_INTEGRAL_YAW,
     MAX_INTEGRAL_YAW);
 
-  //static float t = 0.0;
-  // z_factor = desired_state->z_vel*0.1;
-  // roll_factor = desired_state->roll*0.01;
-  // pitch_factor = desired_state->pitch*0.01;
-  // yaw_factor = desired_state->yaw_vel*0.1;
-  z_factor = 0.5;
-  //roll_factor = 0.0;
-  //pitch_factor = 0.0;
+  z_factor = 0.2 + desired_state->z_vel*0.15;
+  roll_factor = -desired_state->roll*0.05;
+  pitch_factor = desired_state->pitch*0.05;
   yaw_factor = 0.0;
-  //t += 0.00001;
 
-  z_factor = 0.0;
-  roll_factor = 0.0;
-  pitch_factor = 0.0;
-  yaw_factor = 0.0;
+  //z_factor = 0.5;
+  //yaw_factor = 0.0;
+
+  // z_factor = 0.0;
+  // roll_factor = 0.0;
+  // pitch_factor = 0.0;
+  // yaw_factor = 0.0;
 
   // printf("LOG %f,%f,%f\n", dt_float, z_factor, measured_state->z_vel);
 

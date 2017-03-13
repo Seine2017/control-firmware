@@ -63,7 +63,7 @@
 
 // Allowable limits for rotor speeds (0.0 = 1ms pulse, 1.0 = 2ms pulse).
 #define MIN_ROTOR_SPEED 0.0
-#define MAX_ROTOR_SPEED 0.6
+#define MAX_ROTOR_SPEED 0.4
 
 // Rotor speeds are filtered to reduce transients. The higher this parameter is,
 // the more filtering is applied (but the slower the rotors are to respond to

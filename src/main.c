@@ -23,7 +23,7 @@ static void convert_rc_packet(desired_state_t *desired_state) {
   // 1 = roll
   // 2 = pitch
 
-  desired_state->z_vel = ((float) rc_data_packet.channel_0) / 128.0 - 1.0;
+  desired_state->z_vel = 2.0 * (((float) rc_data_packet.channel_0) / 128.0 - 1.0);
   desired_state->roll = ((float) rc_data_packet.channel_1) / 128.0 - 1.0;
   desired_state->pitch = ((float) rc_data_packet.channel_2) / 128.0 - 1.0;
   desired_state->yaw_vel = ((float) rc_data_packet.channel_3) / 128.0 - 1.0;
