@@ -65,15 +65,21 @@ void control_cycle(measured_state_t *measured_state,
     MAX_INTEGRAL_YAW);
 
   //static float t = 0.0;
-  z_factor = desired_state->z_vel*0.1;
-  roll_factor = desired_state->roll*0.01;
-  pitch_factor = desired_state->pitch*0.01;
-  yaw_factor = desired_state->yaw_vel*0.1;
+  // z_factor = desired_state->z_vel*0.1;
+  // roll_factor = desired_state->roll*0.01;
+  // pitch_factor = desired_state->pitch*0.01;
+  // yaw_factor = desired_state->yaw_vel*0.1;
+  z_factor = 0.15;
+  //roll_factor = 0.0;
+  //pitch_factor = 0.0;
+  yaw_factor = 0.0;
   //t += 0.00001;
 
   //printf("LOG %f,%f,%f\n", dt_float, z_factor, measured_state->z_vel);
 
   //printf("z_vel error=%f-%f zfactor=%f\n", desired_state->z_vel, measured_state->z_vel, z_factor);
+
+  //printf("r=%f p=%f zf=%f rf=%f pf=%f yf=%f\n", measured_state->roll, measured_state->pitch, z_factor, roll_factor, pitch_factor, yaw_factor);
 
   // Combine contributions to produce rotor speeds.
   rotor_speeds->a = 0.0 + z_factor + roll_factor - pitch_factor + yaw_factor;

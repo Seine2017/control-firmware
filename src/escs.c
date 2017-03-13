@@ -116,9 +116,10 @@ static float clamp(float x, float min, float max) {
   return x;
 }
 
+float filtered_a = 0.0, filtered_b = 0.0, filtered_c = 0.0, filtered_d = 0.0;
+
 void escs_update(rotor_speeds_t *rotor_speeds) {
   // Filter rotor speeds to eliminate sudden changes.
-  static float filtered_a = 0.0, filtered_b = 0.0, filtered_c = 0.0, filtered_d = 0.0;
   filtered_a = ROTOR_SPEED_FILTERING*filtered_a + (1.0-ROTOR_SPEED_FILTERING)*rotor_speeds->a;
   filtered_b = ROTOR_SPEED_FILTERING*filtered_b + (1.0-ROTOR_SPEED_FILTERING)*rotor_speeds->b;
   filtered_c = ROTOR_SPEED_FILTERING*filtered_c + (1.0-ROTOR_SPEED_FILTERING)*rotor_speeds->c;

@@ -22,14 +22,14 @@
 // Iteration 4: 1.013/192.4/6.746e-5 (bad)
 // Start again
 // Iteration 1 (z3-2.txt): 0.1506/0.03667/0.1546
-#define PID_GAIN_Z_P 0.1506
-#define PID_GAIN_Z_I 0.03667
-#define PID_GAIN_Z_D 0.1546
+#define PID_GAIN_Z_P 0.0
+#define PID_GAIN_Z_I 0.0
+#define PID_GAIN_Z_D 0.0
 #define MIN_INTEGRAL_Z -1.0
 #define MAX_INTEGRAL_Z 1.0
 
 // Roll-factor PID parameters.
-#define PID_GAIN_ROLL_P 0.0
+#define PID_GAIN_ROLL_P 0.01
 #define PID_GAIN_ROLL_I 0.0
 #define PID_GAIN_ROLL_D 0.0
 #define MIN_INTEGRAL_ROLL -1.0
@@ -40,11 +40,11 @@
 // Iteration 2: -0.4264/-2.777/-0.0006686
 // Fixed axis
 // Iteration 3: 4.82/545.7/0.0003971
-#define PID_GAIN_PITCH_P 0.0
+#define PID_GAIN_PITCH_P 0.01
 #define PID_GAIN_PITCH_I 0.0
 #define PID_GAIN_PITCH_D 0.0
-#define MIN_INTEGRAL_PITCH (-0.3/PID_GAIN_PITCH_I)
-#define MAX_INTEGRAL_PITCH (-0.3/PID_GAIN_PITCH_I)
+#define MIN_INTEGRAL_PITCH -1.0
+#define MAX_INTEGRAL_PITCH 1.0
 
 // Yaw-factor PID parameters.
 #define PID_GAIN_YAW_P 0.0
@@ -69,7 +69,7 @@
 // the more filtering is applied (but the slower the rotors are to respond to
 // changes).
 // Range: 0.0 to 1.0
-#define ROTOR_SPEED_FILTERING 0.98
+#define ROTOR_SPEED_FILTERING 0.90
 
 // Specification of which pins on the microcontroller are connected to the PWM
 // inputs on the ESCS.

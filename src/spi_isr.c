@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include <avr/interrupt.h>
+#include <avr/io.h>
 
 #include "comms_interface.h"
 #include "data_structures.h"
@@ -12,12 +13,13 @@ volatile rc_data_packet_t rc_data_packet;
 #define STATE_IDLE 0
 #define STATE_RECEIVE_RC 1
 #define STATE_SEND_LOGGING 2
-volatile uint8_t spi_state = 0;
+volatile uint8_t spi_state = STATE_IDLE;
 volatile uint8_t spi_byte_count = 0;
 
 ISR(SPI_STC_vect)
 {
   //puts("spi interrupt");
+  UDR0 = 'C';
 
   // We've just received a byte.
   uint8_t byte = SPDR;
