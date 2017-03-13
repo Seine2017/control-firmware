@@ -75,7 +75,7 @@ int main() {
     imu_read(&measured_state);
     convert_logg_packet(&measured_state);
 
-    //printf("%f,%f,%f,%f\n", desired_state.z_vel, desired_state.roll, desired_state.pitch, desired_state.yaw_vel);
+    printf("%f,%f,%f,%f\n", desired_state.z_vel, desired_state.roll, desired_state.pitch, desired_state.yaw_vel);
 
     //printf("%f,%f,%f\n", measured_state.roll, measured_state.pitch, measured_state.yaw_vel);
 
