@@ -56,7 +56,7 @@ void control_cycle(measured_state_t *measured_state,
     PID_GAIN_YAW_I,
     PID_GAIN_YAW_D);
 
-  z_factor = 0.45;
+  z_factor = 0.0;
   roll_factor = 0.0;
   pitch_factor = 0.0;
   yaw_factor = 0.0;
