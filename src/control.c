@@ -69,9 +69,9 @@ void control_cycle(measured_state_t *measured_state,
   // roll_factor = desired_state->roll*0.01;
   // pitch_factor = desired_state->pitch*0.01;
   // yaw_factor = desired_state->yaw_vel*0.1;
-  z_factor = 0.0;
-  roll_factor = 0.0;
-  pitch_factor = 0.0;
+  z_factor = 0.45;
+  //roll_factor = 0.0;
+  //pitch_factor = 0.0;
   yaw_factor = 0.0;
   //t += 0.00001;
 

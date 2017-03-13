@@ -19,7 +19,7 @@ volatile uint8_t spi_byte_count = 0;
 ISR(SPI_STC_vect)
 {
   //puts("spi interrupt");
-  UDR0 = 'C';
+  //UDR0 = 'C';
 
   // We've just received a byte.
   uint8_t byte = SPDR;

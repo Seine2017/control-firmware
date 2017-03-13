@@ -19,6 +19,10 @@ static void convert_logg_packet(measured_state_t* measured_state){
 
 static void convert_rc_packet(desired_state_t *desired_state) {
   // TODO: fix this conversion!
+  // 0 = thrust
+  // 1 = roll
+  // 2 = pitch
+
   desired_state->z_vel = ((float) rc_data_packet.channel_0) / 128.0 - 1.0;
   desired_state->roll = ((float) rc_data_packet.channel_1) / 128.0 - 1.0;
   desired_state->pitch = ((float) rc_data_packet.channel_2) / 128.0 - 1.0;
@@ -71,10 +75,12 @@ int main() {
     imu_read(&measured_state);
     convert_logg_packet(&measured_state);
 
+    //printf("%f,%f,%f,%f\n", desired_state.z_vel, desired_state.roll, desired_state.pitch, desired_state.yaw_vel);
+
     //printf("%f,%f,%f\n", measured_state.roll, measured_state.pitch, measured_state.yaw_vel);
 
     // Run control algorithm.
-    //convert_rc_packet(&desired_state);
+    convert_rc_packet(&desired_state);
     control_cycle(&measured_state, &desired_state, &rotor_speeds);
 
     // Update ESC duty cycles.
