@@ -69,7 +69,7 @@
 // the more filtering is applied (but the slower the rotors are to respond to
 // changes).
 // Range: 0.0 to 1.0
-#define ROTOR_SPEED_FILTERING 0.8
+#define ROTOR_SPEED_FILTERING 0.6
 
 // Specification of which pins on the microcontroller are connected to the PWM
 // inputs on the ESCS.
