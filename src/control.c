@@ -79,11 +79,11 @@ void control_cycle(measured_state_t *measured_state,
 
   //printf("z_vel error=%f-%f zfactor=%f\n", desired_state->z_vel, measured_state->z_vel, z_factor);
 
-  printf("r=%f p=%f zf=%f rf=%f pf=%f yf=%f\n", measured_state->roll, measured_state->pitch, z_factor, roll_factor, pitch_factor, yaw_factor);
-
   // Combine contributions to produce rotor speeds.
   rotor_speeds->a = 0.0 + z_factor + roll_factor - pitch_factor + yaw_factor;
   rotor_speeds->b = 0.0 + z_factor - roll_factor - pitch_factor - yaw_factor;
   rotor_speeds->c = 0.0 + z_factor - roll_factor + pitch_factor + yaw_factor;
   rotor_speeds->d = 0.0 + z_factor + roll_factor + pitch_factor - yaw_factor;
+
+  printf("r=%f p=%f zf=%f rf=%f pf=%f yf=%f a=%f b=%f c=%f d=%f\n", measured_state->roll, measured_state->pitch, z_factor, roll_factor, pitch_factor, yaw_factor, rotor_speeds->a, rotor_speeds->b, rotor_speeds->c, rotor_speeds->d);
 }

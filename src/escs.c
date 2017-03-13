@@ -134,5 +134,5 @@ void escs_update(rotor_speeds_t *rotor_speeds) {
   escs_levels.c = level_c;
   escs_levels.d = level_d;
 
-  //printf("a: raw=%f, filtered=%f, level=%d\n", rotor_speeds->a, filtered_a, level_a);
+  printf("%d,%d,%d,%d\n", level_a, level_b, level_c, level_d);
 }

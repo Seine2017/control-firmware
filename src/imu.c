@@ -454,13 +454,13 @@ void imu_read(measured_state_t *destination){
 	}
 	prev_time = curr_time;
 
-	//printf("gx=%f gy=%f ax=%f ay=%f az=%f\n", gyro_x, gyro_y, accel_x, accel_y, accel_z);
+	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, -accel_y, accel_z, dt);
 
-	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z, dt);
-
-	destination->roll = -atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
+	destination->roll = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
 	destination->pitch = asinf(2*(q0*q2-q1*q3));
 	destination->yaw_vel = gyro_z;
+
+	//printf("gx=%f gy=%f ax=%f ay=%f az=%f r=%f p=%f\n", gyro_x, gyro_y, accel_x, accel_y, accel_z, destination->roll, destination->pitch);
 
 	static float z_vel = 0.0;
 	float z_accel = get_vert_accel(accel_x, accel_y, accel_z);
