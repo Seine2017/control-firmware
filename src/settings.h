@@ -31,7 +31,7 @@
 // Roll-factor PID parameters.
 #define PID_GAIN_ROLL_P 0.1
 #define PID_GAIN_ROLL_I 0.0
-#define PID_GAIN_ROLL_D 0.0
+#define PID_GAIN_ROLL_D 0.02
 #define MIN_INTEGRAL_ROLL -1.0
 #define MAX_INTEGRAL_ROLL 1.0
 
@@ -41,8 +41,8 @@
 // Fixed axis
 // Iteration 3: 4.82/545.7/0.0003971
 #define PID_GAIN_PITCH_P 0.1
-#define PID_GAIN_PITCH_I 0.0
-#define PID_GAIN_PITCH_D 0.0
+#define PID_GAIN_PITCH_I 0.002
+#define PID_GAIN_PITCH_D 0.015
 #define MIN_INTEGRAL_PITCH -1.0
 #define MAX_INTEGRAL_PITCH 1.0
 
