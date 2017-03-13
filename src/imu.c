@@ -156,8 +156,8 @@ static void read_raw_accel(uint16_t *accel){
 	uint8_t raw_accel[6];
 	read_IMU_bytes(MPU9250_DEFAULT_ADDRESS, MPU9250_RA_ACCEL_XOUT_H,6 , &raw_accel[0]);
 
-	accel[0] = (((uint16_t)raw_accel[0]<<8)|raw_accel[1]);
-	accel[1] = -(((uint16_t)raw_accel[2]<<8)|raw_accel[3]);
+	accel[0] = -(((uint16_t)raw_accel[0]<<8)|raw_accel[1]);
+	accel[1] = (((uint16_t)raw_accel[2]<<8)|raw_accel[3]);
 	accel[2] = (((uint16_t)raw_accel[4]<<8)|raw_accel[5]);
 }
 
@@ -454,11 +454,11 @@ void imu_read(measured_state_t *destination){
 	}
 	prev_time = curr_time;
 
-	printf("gx=%f gy=%f ax=%f ay=%f az=%f\n", gyro_x, gyro_y, accel_x, accel_y, accel_z);
+	//printf("gx=%f gy=%f ax=%f ay=%f az=%f\n", gyro_x, gyro_y, accel_x, accel_y, accel_z);
 
 	MadgwickAHRSupdateIMU(gyro_x, gyro_y, gyro_z, accel_x, accel_y, accel_z, dt);
 
-	destination->roll = atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
+	destination->roll = -atan2f(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
 	destination->pitch = asinf(2*(q0*q2-q1*q3));
 	destination->yaw_vel = gyro_z;
 

@@ -74,7 +74,7 @@ int main() {
     //printf("%f,%f,%f\n", measured_state.roll, measured_state.pitch, measured_state.yaw_vel);
 
     // Run control algorithm.
-    convert_rc_packet(&desired_state);
+    //convert_rc_packet(&desired_state);
     control_cycle(&measured_state, &desired_state, &rotor_speeds);
 
     // Update ESC duty cycles.
