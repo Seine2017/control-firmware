@@ -11,8 +11,8 @@
 #include <avr/interrupt.h>
 
 //Command bytes for the slave to figure out what it needs to do.
-#define CMD_RECEIVE_RC_INPUTS 0xC3		//If the slave receives this, it expects to receive the RC input bytes.
-#define CMD_SEND_LOGGING_DATA 0x5A		//If the slave receives this, it starts sending the logging data.
+#define CMD_RECEIVE_RC_INPUTS 0xC3    //If the slave receives this, it expects to receive the RC input bytes.
+#define CMD_SEND_LOGGING_DATA 0x5A    //If the slave receives this, it starts sending the logging data.
 
 void init_spi_master(void);
 void init_spi_slave(void);

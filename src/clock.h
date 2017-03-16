@@ -1,10 +1,5 @@
 // clock.h declares the functions and variables defined in clock.c.
 
-// clock.c contains routines to manage a monotonic time source; in other words,
-// a way of measuring how much time has passed since the processor was switched
-// on. This is used by the control algorithm to perform calculus operations
-// (integration and differentiation).
-
 #ifndef __CLOCK_H
 #define __CLOCK_H
 
